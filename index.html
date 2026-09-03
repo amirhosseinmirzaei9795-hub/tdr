@@ -1,1 +1,1529 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>کلن TDR — گیم اُپن‌فرانت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+<style>
+/* ---------- پایه ---------- */
+:root{
+  --bg:#0f0e0b; --panel:#15130e; --panel2:#1a1712;
+  --ink:#ece5d8; --ink2:#c7bfae; --mut:#8f8875;
+  --amber:#ffb224; --amber-deep:#6b4e0e;
+  --red:#e4572e; --green:#7fb069;
+  --line:#282319; --line2:#3b3423;
+  --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{background:var(--bg);color:var(--ink);font-family:Vazirmatn,sans-serif;line-height:1.85;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(#1a160f 1px,transparent 1px),linear-gradient(90deg,#1a160f 1px,transparent 1px);
+  background-size:56px 56px;opacity:.55;
+  -webkit-mask-image:linear-gradient(#000 30%,transparent 92%);mask-image:linear-gradient(#000 30%,transparent 92%)}
+::selection{background:var(--amber);color:#171204}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#2c2618;border:2px solid var(--bg)}
+::-webkit-scrollbar-track{background:var(--bg)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;background:none;border:0;color:inherit}
+img,svg{display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.mono{font-family:var(--mono);letter-spacing:.02em}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.kick-fa{font-size:13px;font-weight:700;color:var(--amber)}
+i[data-lucide]{width:16px;height:16px;flex:none}
 
+/* ---------- دکمه‌ها و فیلدها ---------- */
+.btn{display:inline-flex;align-items:center;gap:9px;padding:11px 22px;font-weight:700;font-size:14px;
+  border:1px solid var(--line2);transition:.18s;border-radius:0;white-space:nowrap}
+.btn-solid{background:var(--amber);color:#171204;border-color:var(--amber)}
+.btn-solid:hover{background:#ffc558;border-color:#ffc558;transform:translateY(-2px)}
+.btn-ghost{color:var(--ink)}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-lg{padding:14px 30px;font-size:15px}
+.btn-ico{width:32px;height:32px;padding:0;justify-content:center;display:inline-flex;align-items:center;border:1px solid var(--line2);transition:.15s}
+.btn-ico:hover{border-color:var(--amber);color:var(--amber)}
+.btn-ico.danger:hover{border-color:var(--red);color:var(--red)}
+.btn-danger-outline{border-color:var(--red);color:var(--red)}
+.btn-danger-outline:hover{background:var(--red);color:#fff}
+.inp{width:100%;background:#12100c;border:1px solid var(--line2);color:var(--ink);padding:10px 13px;
+  font:inherit;font-size:14px;border-radius:0;transition:.15s}
+.inp:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,178,36,.10)}
+textarea.inp{resize:vertical;line-height:1.8}
+label.field{display:block;font-size:12.5px;color:var(--mut);margin-bottom:14px}
+label.field .inp{margin-top:6px;font-size:14px;color:var(--ink)}
+.chk{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;color:var(--ink2)}
+.chk input{accent-color:var(--amber);width:15px;height:15px}
+
+/* ---------- هدر ---------- */
+.hd{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:30px;height:66px;padding:0 28px;
+  border-bottom:1px solid var(--line);background:rgba(15,14,11,.88);backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--amber);color:var(--amber);
+  font-size:12px;font-weight:700}
+.brand-text{font-weight:900;font-size:17px;line-height:1.2;display:flex;flex-direction:column}
+.brand-text small{font-family:var(--mono);font-weight:400;font-size:8.5px;color:var(--mut);letter-spacing:.28em}
+.nav{display:flex;gap:6px;margin-inline-start:auto}
+.nav a{display:flex;align-items:center;gap:7px;padding:8px 13px;font-size:14px;color:var(--ink2);border-bottom:2px solid transparent;transition:.15s}
+.nav a .mono{font-size:10px;color:var(--mut)}
+.nav a:hover{color:var(--ink)}
+.nav a.active{color:var(--amber);border-bottom-color:var(--amber)}
+.nav a.active .mono{color:var(--amber)}
+.hd-side{display:flex;align-items:center;gap:16px;margin-inline-start:auto}
+.nav + .hd-side{margin-inline-start:0}
+.live{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mut)}
+.live .dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 1.6s infinite}
+.live b{color:var(--ink2);font-weight:500}
+@keyframes pulse{50%{opacity:.25}}
+.burger{display:none;width:36px;height:36px;place-items:center;border:1px solid var(--line2)}
+.mobile-nav{display:none;position:fixed;top:66px;inset-inline:0;z-index:59;background:var(--panel);
+  border-bottom:1px solid var(--line);flex-direction:column;padding:10px 20px}
+.mobile-nav.open{display:flex}
+.mobile-nav a{padding:12px 4px;border-bottom:1px solid var(--line);font-size:15px;color:var(--ink2)}
+.mobile-nav a:last-child{border:0}
+.mobile-nav a .mono{color:var(--amber);font-size:11px;margin-inline-end:8px}
+
+/* ---------- هیرو ---------- */
+.hero{padding:66px 0 0;position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:56px;align-items:center}
+.hero-kicker{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.hero-kicker::before{content:'';width:34px;height:1px;background:var(--amber)}
+.hero h1{font-size:clamp(2.4rem,5.2vw,4.1rem);font-weight:900;line-height:1.32;letter-spacing:-.5px}
+.hero h1 .hl{color:var(--amber)}
+.hero-sub{margin:20px 0 30px;font-size:16.5px;color:var(--ink2);max-width:34em}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:0;margin-top:44px;border-block:1px solid var(--line);flex-wrap:wrap}
+.hero-stats>div{padding:16px 26px;border-inline-end:1px solid var(--line)}
+.hero-stats>div:first-child{padding-inline-start:0}
+.hero-stats b{display:block;font-size:24px;font-weight:900;color:var(--amber)}
+.hero-stats span{font-size:12px;color:var(--mut)}
+
+/* ---------- نقشه نبرد زنده ---------- */
+.bmap{border:1px solid var(--line2);background:var(--panel);position:relative}
+.bmap::before,.bmap::after,
+.bmap .corner::before,.bmap .corner::after{content:'';position:absolute;width:14px;height:14px;border:1px solid var(--amber);z-index:2}
+.bmap::before{top:-1px;right:-1px;border-width:2px 2px 0 0}
+.bmap::after{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.bmap .corner::before{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.bmap .corner::after{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+.bm-bar{display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--line);font-size:11px}
+.bm-map-name{direction:ltr;color:var(--ink2)}
+.bm-live{margin-inline-start:auto;display:flex;align-items:center;gap:7px;color:var(--amber)}
+.bm-live i{width:6px;height:6px;background:var(--amber);border-radius:50%;animation:pulse 1.2s infinite;font-style:normal}
+.bm-body{display:grid;grid-template-columns:1fr 216px;height:352px}
+.bm-canvas-wrap{position:relative;border-inline-end:1px solid var(--line);overflow:hidden}
+.bm-canvas-wrap canvas{width:100%;height:100%;display:block;cursor:crosshair}
+.bm-tag{position:absolute;bottom:8px;inset-inline-end:10px;font-size:9.5px;color:var(--mut);letter-spacing:.2em;pointer-events:none}
+.bm-side{display:flex;flex-direction:column;padding:14px;gap:6px;min-height:0}
+.bm-side-t{font-size:9.5px;color:var(--mut);letter-spacing:.2em;margin:4px 0 2px}
+#blead{flex:1;overflow:hidden;min-height:0}
+.lb-row{padding:5px 0;border-bottom:1px solid var(--line)}
+.lb-top{display:flex;justify-content:space-between;font-size:12px;align-items:baseline;gap:8px}
+.lb-name{font-weight:700;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-row.me .lb-name{color:var(--amber)}
+.lb-pct{font-family:var(--mono);font-size:10px;color:var(--mut)}
+.lb-bar{height:3px;background:#221d13;margin-top:4px}
+.lb-bar i{display:block;height:100%}
+#bfeed{overflow:hidden;max-height:104px;flex:none}
+.feed-row{display:flex;gap:8px;font-size:10.5px;color:var(--ink2);padding:3px 0;align-items:baseline}
+.feed-row .mono{font-size:9px;color:var(--mut);white-space:nowrap}
+.bm-join{display:flex;flex-direction:column;gap:8px;margin-top:auto;padding-top:10px}
+.bm-join .btn{justify-content:center}
+.bm-hint{font-size:10.5px;color:var(--mut);line-height:1.7}
+
+/* ---------- نوار خبر ---------- */
+.ticker{border-block:1px solid var(--line);background:var(--panel);overflow:hidden;margin-top:64px}
+.ticker-track{display:flex;width:max-content;direction:ltr;animation:tick 48s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tk-item{direction:rtl;white-space:nowrap;padding:9px 0;font-size:13px;color:var(--ink2);display:flex;align-items:center}
+.tk-item .sep{color:var(--amber);font-size:9px;font-style:normal;padding:0 24px}
+
+/* ---------- بخش‌ها ---------- */
+section.block{padding:84px 0 30px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:38px}
+.sec-num{font-size:13px;color:var(--amber)}
+.sec-head h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900}
+.sec-line{flex:1;height:1px;background:var(--line);align-self:center}
+.sec-hint{font-size:11px;color:var(--mut);letter-spacing:.15em}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+.reveal.vis{opacity:1;transform:none}
+
+/* ---------- اخبار ---------- */
+.feat{border:1px solid var(--line2);background:var(--panel);padding:34px 38px;margin-bottom:34px;cursor:pointer;transition:.2s;position:relative}
+.feat:hover{border-color:var(--amber)}
+.feat-meta{font-family:var(--mono);font-size:10.5px;color:var(--amber);letter-spacing:.14em;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
+.feat h3{font-size:clamp(1.35rem,2.6vw,1.9rem);font-weight:900;line-height:1.55;margin-bottom:12px}
+.feat p{color:var(--ink2);max-width:52em}
+.feat .read{margin-top:20px;display:inline-flex;align-items:center;gap:8px;color:var(--amber);font-weight:700;font-size:14px}
+.feat .read i{transition:transform .2s}
+.feat:hover .read i{transform:translateX(-5px)}
+.nrow{display:grid;grid-template-columns:70px 1fr auto;gap:22px;align-items:center;padding:22px 6px;
+  border-bottom:1px solid var(--line);cursor:pointer;transition:.18s}
+.nrow:hover{background:#14110c;padding-inline:18px}
+.nrow-num{font-family:var(--mono);font-size:13px;color:var(--mut);transition:.18s}
+.nrow:hover .nrow-num{color:var(--amber)}
+.nrow h4{font-size:17.5px;font-weight:800;line-height:1.6}
+.nrow p{font-size:13.5px;color:var(--mut);margin-top:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.nrow-side{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
+.nrow-side .cat{color:var(--amber)}
+.empty{padding:44px;text-align:center;color:var(--mut);border:1px dashed var(--line2)}
+
+/* ---------- لینک‌ها و راهنماها ---------- */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.tab{padding:7px 16px;font-size:13px;border:1px solid var(--line2);color:var(--ink2);transition:.15s}
+.tab:hover{border-color:var(--amber)}
+.tab.on{background:var(--amber);border-color:var(--amber);color:#171204;font-weight:700}
+.lrow{display:grid;grid-template-columns:52px 1fr auto;gap:20px;align-items:center;padding:19px 6px;
+  border-bottom:1px solid var(--line);transition:.18s}
+.lrow:hover{background:#14110c;padding-inline:18px}
+.lrow .num{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.lrow:hover .num{color:var(--amber)}
+.lrow h4{font-size:16.5px;font-weight:800;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lrow .dom{font-family:var(--mono);font-size:10.5px;color:var(--mut);direction:ltr;unicode-bidi:isolate;border:1px solid var(--line);padding:1px 8px}
+.lrow p{font-size:13.5px;color:var(--mut)}
+.lrow .go{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line2);color:var(--mut);transition:.15s}
+.lrow:hover .go{border-color:var(--amber);color:var(--amber)}
+
+/* ---------- لیدربورد ---------- */
+.board-stats{display:flex;border:1px solid var(--line2);background:var(--panel);margin-bottom:30px;flex-wrap:wrap}
+.board-stats>div{flex:1;min-width:160px;padding:20px 24px;border-inline-end:1px solid var(--line)}
+.board-stats>div:last-child{border-inline-end:0}
+.board-stats b{display:block;font-size:24px;font-weight:900;color:var(--amber);line-height:1.3}
+.board-stats span{font-size:12px;color:var(--mut)}
+.brow{display:grid;grid-template-columns:56px 1fr auto 150px;gap:20px;align-items:center;padding:20px 6px;
+  border-bottom:1px solid var(--line);transition:.18s}
+.brow:hover{background:#14110c;padding-inline:18px}
+.brow .rk{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--mut)}
+.brow.r1 .rk{color:var(--amber)}
+.brow.r2 .rk{color:#b8c0cc}
+.brow.r3 .rk{color:#cd8f5a}
+.brow .who strong{font-size:17px;font-weight:800;display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brow .clan{font-family:var(--mono);font-size:10px;border:1px solid var(--amber);color:var(--amber);
+  padding:1px 8px;direction:ltr;unicode-bidi:isolate;letter-spacing:.08em}
+.brow .clan.other{border-color:var(--line2);color:var(--mut)}
+.brow .who p{font-size:12.5px;color:var(--mut);margin-top:2px}
+.brow .wins{text-align:center;min-width:64px}
+.brow .wins b{font-family:var(--mono);font-size:20px;color:var(--amber);display:block;line-height:1.25}
+.brow .wins span{font-size:10.5px;color:var(--mut)}
+.brow .rate .ltr{font-family:var(--mono);font-size:10.5px;color:var(--mut)}
+.rate .bar{height:4px;background:#221d13;margin-top:6px}
+.rate .bar i{display:block;height:100%;background:var(--amber);transition:width .6s}
+
+/* ---------- گفتگو ---------- */
+.chat-box{max-width:820px;border:1px solid var(--line2);background:var(--panel)}
+.chat-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line);font-size:11px;color:var(--mut)}
+.chat-bar b{color:var(--amber);font-weight:700;font-size:13px}
+.chat-log{height:420px;overflow-y:auto;padding:20px 22px;display:flex;flex-direction:column;gap:18px}
+.msg{max-width:85%}
+.msg-head{display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-bottom:2px}
+.msg-head b{font-family:Vazirmatn;font-size:13.5px;font-weight:800}
+.msg p{font-size:14.5px;color:var(--ink2);line-height:1.8;word-break:break-word}
+.msg.mine{border-inline-start:2px solid var(--amber);padding-inline-start:14px}
+.msg.mine .msg-head::after{content:'شما';font-family:Vazirmatn;font-size:10px;color:var(--amber);border:1px solid var(--amber);padding:0 6px}
+.chat-input{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
+.chat-input .inp{flex:1}
+.chat-note{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--mut)}
+.chat-note i{width:14px;height:14px;color:var(--amber)}
+.chat-join{padding:60px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.chat-join .big-i{width:52px;height:52px;border:1px solid var(--line2);display:grid;place-items:center;color:var(--amber);margin-bottom:12px}
+.chat-join .big-i i{width:24px;height:24px}
+.chat-join h4{font-size:20px;font-weight:900}
+.chat-join p{font-size:13.5px;color:var(--mut);margin-bottom:22px}
+.chat-join .inp{max-width:300px;text-align:center}
+.swatches{display:flex;gap:10px;margin:16px 0 22px}
+.swatch{width:26px;height:26px;border-radius:50%;border:2px solid transparent;transition:.15s;cursor:pointer}
+.swatch.on{border-color:var(--ink);transform:scale(1.15)}
+.chat-me-tools{display:flex;gap:10px;align-items:center}
+.chat-me-tools button{font-size:11.5px;color:var(--mut);display:flex;gap:5px;align-items:center}
+.chat-me-tools button:hover{color:var(--amber)}
+
+/* ---------- CTA و فوتر ---------- */
+.cta{border-block:1px solid var(--line);background:var(--panel);margin-top:90px}
+.cta-in{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:52px 0;flex-wrap:wrap}
+.cta h3{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:900;margin:8px 0 6px}
+.cta p{color:var(--ink2)}
+footer{padding:56px 0 0}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:44px}
+.foot-grid p{font-size:13.5px;color:var(--mut);max-width:30em;margin-top:12px}
+.foot-grid h5{font-size:13px;color:var(--amber);margin-bottom:14px;font-weight:800}
+.foot-grid a{display:block;font-size:14px;color:var(--ink2);padding:4px 0;transition:.15s}
+.foot-grid a:hover{color:var(--amber);padding-inline-start:6px}
+.foot-credit{margin-top:14px;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2)}
+.foot-credit i{width:14px;height:14px;color:var(--amber)}
+.foot-credit b{color:var(--amber)}
+.foot-base{border-top:1px solid var(--line);padding:20px 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--mut)}
+
+/* ---------- مودال‌ها ---------- */
+.overlay{position:fixed;inset:0;z-index:80;background:rgba(10,9,7,.72);backdrop-filter:blur(4px);
+  display:grid;place-items:center;padding:22px;opacity:0;pointer-events:none;transition:.2s}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{width:min(680px,100%);max-height:86vh;display:flex;flex-direction:column;background:var(--panel);
+  border:1px solid var(--line2);transform:translateY(14px);transition:.25s;position:relative}
+.overlay.show .modal{transform:none}
+.modal::before,.modal::after{content:'';position:absolute;width:12px;height:12px;border:1px solid var(--amber)}
+.modal::before{top:-1px;right:-1px;border-width:2px 2px 0 0}
+.modal::after{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+.modal-bar{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;border-bottom:1px solid var(--line);font-size:11px;color:var(--mut)}
+.modal-bar .ltr{color:var(--amber)}
+.modal-body{padding:30px 32px;overflow-y:auto}
+.modal-body h3{font-size:22px;font-weight:900;line-height:1.6;margin-bottom:10px}
+.modal-body .m-meta{font-family:var(--mono);font-size:10.5px;color:var(--amber);letter-spacing:.12em;margin-bottom:22px}
+.modal-body p{color:var(--ink2);font-size:15px;margin-bottom:16px}
+.modal.small{width:min(420px,100%)}
+.modal.small .modal-body{padding:28px}
+.modal.small h4{font-size:17px;font-weight:900;margin-bottom:6px}
+.modal.small p{font-size:13.5px;color:var(--mut)}
+.m-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.err{color:var(--red);font-size:12.5px;min-height:20px}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(5px)}50%{transform:translateX(-5px)}75%{transform:translateX(4px)}}
+
+/* ---------- پنل ادمین ---------- */
+.pn{position:fixed;inset:0;z-index:70;background:var(--bg);display:none;grid-template-columns:250px 1fr}
+.pn.open{display:grid}
+.pn-side{border-inline-end:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;padding:22px 0}
+.pn-brand{font-size:11px;color:var(--amber);letter-spacing:.22em;padding:0 24px 20px;border-bottom:1px solid var(--line)}
+.pn-nav{padding:14px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
+.pn-nav button{display:flex;align-items:center;gap:12px;padding:11px 14px;font-size:14px;color:var(--ink2);
+  border-inline-start:2px solid transparent;transition:.15s;text-align:right}
+.pn-nav button:hover{color:var(--ink);background:#181510}
+.pn-nav button.on{color:var(--amber);border-inline-start-color:var(--amber);background:#181510}
+.pn-nav button .mono{font-size:10px;color:var(--mut);margin-inline-start:auto}
+.pn-side-foot{padding:14px 18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.pn-side-foot .btn{justify-content:center}
+.pn-main{overflow-y:auto;padding:40px 46px}
+.pn-head{margin-bottom:30px}
+.pn-head h3{font-size:24px;font-weight:900}
+.pn-head .mono{font-size:10.5px;color:var(--amber);letter-spacing:.18em}
+.a-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.a-top h4{font-size:16px;font-weight:800}
+.a-stats{display:flex;border:1px solid var(--line2);background:var(--panel);margin-bottom:34px;flex-wrap:wrap}
+.a-stat{flex:1;min-width:150px;padding:26px 24px;border-inline-end:1px solid var(--line)}
+.a-stat:last-child{border-inline-end:0}
+.a-stat span{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--amber);display:block;line-height:1.2}
+.a-stat em{font-style:normal;font-size:12.5px;color:var(--mut)}
+.a-block{border:1px solid var(--line);background:var(--panel);padding:22px 24px;margin-bottom:24px}
+.a-block>h4{font-size:14.5px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+.a-block>h4 i{color:var(--amber);width:15px;height:15px}
+.a-row{display:flex;align-items:center;gap:16px;padding:13px 4px;border-bottom:1px solid var(--line)}
+.a-row:last-child{border-bottom:0}
+.a-row-main{flex:1;min-width:0}
+.a-row-main strong{font-size:14px;font-weight:800;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a-row-main .mono{font-size:10.5px;color:var(--mut)}
+.badge{display:inline-block;font-size:10px;color:var(--amber);border:1px solid var(--amber);padding:0 7px;vertical-align:2px;font-weight:700}
+.a-row-btns{display:flex;gap:8px}
+.f-form{border:1px solid var(--amber);background:#161309;padding:24px;margin-bottom:26px}
+.f-form h4{font-size:15px;font-weight:800;margin-bottom:18px;color:var(--amber)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fbtns{display:flex;gap:10px;margin-top:6px}
+.log-row{display:flex;gap:14px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2)}
+.log-row:last-child{border:0}
+.log-row .mono{font-size:10.5px;color:var(--mut);white-space:nowrap;padding-top:3px}
+.hint{font-size:11.5px;color:var(--mut);margin-top:4px}
+
+/* ---------- توست ---------- */
+#toasts{position:fixed;bottom:24px;inset-inline-start:24px;z-index:99;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:11px;background:var(--panel2);border:1px solid var(--line2);
+  border-inline-start:3px solid var(--amber);padding:13px 18px;font-size:13.5px;color:var(--ink);
+  transform:translateY(14px);opacity:0;transition:.28s;max-width:340px}
+.toast.show{transform:none;opacity:1}
+.toast.err{border-inline-start-color:var(--red)}
+.toast i{color:var(--amber);width:16px;height:16px}
+.toast.err i{color:var(--red)}
+
+/* ---------- ریسپانسیو ---------- */
+@media(max-width:1080px){
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .hero h1{font-size:clamp(2.2rem,7vw,3.4rem)}
+}
+@media(max-width:880px){
+  .nav{display:none}
+  .burger{display:grid;place-items:center}
+  .live{display:none}
+  .bm-body{height:310px}
+  .pn{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .pn-side{flex-direction:row;align-items:center;padding:0;border-inline-end:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .pn-brand{border:0;padding:16px 20px;white-space:nowrap}
+  .pn-nav{flex-direction:row;padding:0 10px}
+  .pn-nav button{border-inline-start:0;border-bottom:2px solid transparent;white-space:nowrap}
+  .pn-nav button.on{border-bottom-color:var(--amber)}
+  .pn-nav button .mono{display:none}
+  .pn-side-foot{flex-direction:row;border-top:0;padding:0 14px}
+  .pn-main{padding:26px 20px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:620px){
+  .wrap{padding:0 18px}
+  .hd{padding:0 16px;gap:14px}
+  .bm-body{grid-template-columns:1fr;grid-template-rows:230px auto;height:auto}
+  .bm-canvas-wrap{border-inline-end:0;border-bottom:1px solid var(--line)}
+  #bfeed{max-height:60px}
+  .nrow{grid-template-columns:1fr;gap:6px}
+  .nrow-num{display:none}
+  .lrow{grid-template-columns:1fr;gap:8px}
+  .lrow .num{display:none}
+  .brow{grid-template-columns:40px 1fr auto}
+  .brow .rate{display:none}
+  .frow{grid-template-columns:1fr}
+  .hero-stats>div{padding:12px 16px}
+  .foot-grid{grid-template-columns:1fr}
+  .pn-nav button span{font-size:12.5px}
+  .modal-body{padding:22px}
+}
+</style>
+</head>
+<body>
+
+<div id="toasts"></div>
+
+<!-- ================= هدر ================= -->
+<header class="hd">
+  <a class="brand" href="#home">
+    <span class="brand-mark mono ltr">OF</span>
+    <span class="brand-text">اُپن‌فرانت<small>OPENFRONT · TDR CLAN</small></span>
+  </a>
+  <nav class="nav" id="mainNav">
+    <a href="#home" class="active"><span class="mono">01</span>خانه</a>
+    <a href="#news"><span class="mono">02</span>اخبار</a>
+    <a href="#links"><span class="mono">03</span>لینک‌ها</a>
+    <a href="#board"><span class="mono">04</span>لیدربورد</a>
+    <a href="#chat"><span class="mono">05</span>گفتگو</a>
+  </nav>
+  <div class="hd-side">
+    <span class="live mono ltr"><i class="dot"></i>LIVE <b id="clock">--:--:--</b></span>
+    <button class="btn btn-ghost btn-sm" id="adminBtn"><i data-lucide="lock"></i><span id="adminBtnLabel">ورود مدیر</span></button>
+    <button class="burger" id="burger" aria-label="منو"><i data-lucide="menu"></i></button>
+  </div>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <a href="#home"><span class="mono">01</span>خانه</a>
+  <a href="#news"><span class="mono">02</span>اخبار</a>
+  <a href="#links"><span class="mono">03</span>لینک‌ها</a>
+  <a href="#board"><span class="mono">04</span>لیدربورد</a>
+  <a href="#chat"><span class="mono">05</span>گفتگو</a>
+</div>
+
+<main>
+  <!-- ================= هیرو ================= -->
+  <section class="hero" id="home">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-kicker"><span class="kick-fa" id="heroKicker"></span></div>
+          <h1 id="heroTitle"></h1>
+          <p class="hero-sub" id="heroSub"></p>
+          <div class="hero-btns">
+            <a class="btn btn-solid btn-lg" id="heroCta" target="_blank" rel="noopener">
+              <i data-lucide="send"></i><span id="heroCtaLabel"></span>
+            </a>
+            <a class="btn btn-ghost btn-lg" id="heroPlay" target="_blank" rel="noopener">
+              <i data-lucide="play"></i>شروع بازی
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div><b id="stWins">۰</b><span>برد ثبت‌شده کلن</span></div>
+            <div><b id="stNews">۰</b><span>اطلاعیه و خبر</span></div>
+            <div><b id="stLinks">۰</b><span>لینک و راهنما</span></div>
+            <div><b id="stChat">۰</b><span>پیام گفتگو</span></div>
+          </div>
+        </div>
+        <!-- نقشه نبرد زنده -->
+        <div class="bmap">
+          <span class="corner"></span>
+          <div class="bm-bar mono">
+            <span class="bm-map-name ltr">MAP / TERRITORY · TDR SIM</span>
+            <span class="bm-live ltr"><i></i>LIVE BATTLE</span>
+          </div>
+          <div class="bm-body">
+            <div class="bm-canvas-wrap">
+              <canvas id="bmap"></canvas>
+              <span class="bm-tag mono ltr">SIMULATION</span>
+            </div>
+            <aside class="bm-side">
+              <span class="bm-side-t mono ltr">LEADERBOARD</span>
+              <div id="blead"></div>
+              <span class="bm-side-t mono ltr">LIVE FEED</span>
+              <div id="bfeed"></div>
+              <div class="bm-join">
+                <button class="btn btn-solid btn-sm" id="bjoinBtn"><i data-lucide="flag"></i>پیوستن به نبرد</button>
+                <button class="btn btn-ghost btn-sm" id="bresetBtn"><i data-lucide="rotate-ccw"></i>نقشه‌ی نو</button>
+                <p class="bm-hint">روی هر نقطه‌ی خالی نقشه کلیک کنید تا قلمرو شما همان‌جا آغاز شود؛ فرماندهی با شماست.</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
+  </section>
+
+  <!-- ================= اخبار ================= -->
+  <section class="block" id="newsSec">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num mono">/ 02</span><h2>اخبار و اطلاعیه‌ها</h2><span class="sec-line"></span><span class="sec-hint mono ltr" id="newsHint"></span></div>
+      <div id="featBox" class="reveal"></div>
+      <div id="newsList" class="reveal"></div>
+    </div>
+  </section>
+
+  <!-- ================= لینک‌ها و راهنماها ================= -->
+  <section class="block" id="linksSec">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num mono">/ 03</span><h2>لینک‌ها و راهنماها</h2><span class="sec-line"></span><span class="sec-hint mono ltr" id="linksHint"></span></div>
+      <div class="tabs reveal" id="linkTabs"></div>
+      <div id="linkList" class="reveal"></div>
+    </div>
+  </section>
+
+  <!-- ================= لیدربورد ================= -->
+  <section class="block" id="boardSec">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num mono">/ 04</span><h2>لیدربورد بازیکنان</h2><span class="sec-line"></span><span class="sec-hint mono ltr" id="boardHint"></span></div>
+      <div class="board-stats reveal" id="boardStats"></div>
+      <div class="tabs reveal" id="boardTabs"></div>
+      <div id="boardList" class="reveal"></div>
+      <p class="chat-note reveal"><i data-lucide="info"></i>نتیجه‌ی برد خود را در کانال روبیکا بفرستید تا توسط مدیر در لیدربورد ثبت شود؛ رتبه‌بندی بر اساس تعداد برد است.</p>
+    </div>
+  </section>
+
+  <!-- ================= گفتگو ================= -->
+  <section class="block" id="chatSec">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="sec-num mono">/ 05</span><h2>اتاق گفتگو</h2><span class="sec-line"></span><span class="sec-hint mono ltr">#TDR_CLAN</span></div>
+      <div class="reveal" id="chatArea"></div>
+      <p class="chat-note reveal"><i data-lucide="info"></i>پیام‌ها روی همین مرورگر ذخیره می‌شوند؛ نسخه‌ی بعدی به سرویس Realtime وصل می‌شود تا اعضای کلن هم‌زمان گفتگو کنند.</p>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta">
+    <div class="wrap cta-in">
+      <div>
+        <span class="kick-fa">همراه شوید</span>
+        <h3 id="ctaTitle"></h3>
+        <p id="ctaText"></p>
+      </div>
+      <a class="btn btn-solid btn-lg" id="ctaLink" target="_blank" rel="noopener">
+        <i data-lucide="send"></i><span id="ctaLinkLabel"></span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#home">
+          <span class="brand-mark mono ltr">OF</span>
+          <span class="brand-text">اُپن‌فرانت<small>OPENFRONT · TDR CLAN</small></span>
+        </a>
+        <p>خانه‌ی کلن TDR در گیم ایرانی «اُپن‌فرانت»؛ اخبار، لیدربورد بازیکنان و گفت‌وگوی اعضا — هم‌راستا با کانال روبیکا.</p>
+        <div class="foot-credit"><i data-lucide="code-2"></i>طراحی و توسعه: <b>امیرحسین</b></div>
+      </div>
+      <div>
+        <h5>بخش‌های سایت</h5>
+        <a href="#home">خانه</a>
+        <a href="#news">اخبار و اطلاعیه‌ها</a>
+        <a href="#links">لینک‌ها و راهنماها</a>
+        <a href="#board">لیدربورد بازیکنان</a>
+        <a href="#chat">اتاق گفتگو</a>
+      </div>
+      <div>
+        <h5>اتصال</h5>
+        <a id="footRubika" target="_blank" rel="noopener">کانال روبیکا کلن</a>
+        <a id="footPlay" target="_blank" rel="noopener">شروع بازی</a>
+        <a href="#board">جدول برترین‌ها</a>
+        <a href="#chat">هماهنگی و پرسش</a>
+      </div>
+    </div>
+    <div class="foot-base mono">
+      <span>© <span id="footYear"></span> اُپن‌فرانت · کلن TDR</span>
+      <span>سازنده: امیرحسین</span>
+      <span class="ltr">HTML · CSS · JS — NO FRAMEWORK</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= مودال خبر ================= -->
+<div class="overlay" id="newsOverlay">
+  <div class="modal">
+    <div class="modal-bar mono"><span class="ltr" id="newsModalTag">news</span>
+      <button class="btn-ico" data-close="newsOverlay" aria-label="بستن"><i data-lucide="x"></i></button></div>
+    <div class="modal-body" id="newsModalBody"></div>
+  </div>
+</div>
+
+<!-- ================= ورود مدیر ================= -->
+<div class="overlay" id="loginOverlay" style="z-index:85">
+  <div class="modal small">
+    <div class="modal-bar mono"><span class="ltr">ADMIN / LOGIN</span>
+      <button class="btn-ico" data-close="loginOverlay" aria-label="بستن"><i data-lucide="x"></i></button></div>
+    <div class="modal-body">
+      <h4>ورود مدیر</h4>
+      <p>برای مدیریت کلن TDR، رمز عبور را وارد کنید.</p>
+      <form id="loginForm">
+        <label class="field">رمز عبور<input class="inp ltr" type="password" id="loginPass" autocomplete="current-password"></label>
+        <div class="err" id="loginErr"></div>
+        <button class="btn btn-solid" style="width:100%;justify-content:center"><i data-lucide="unlock"></i>ورود به پنل</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= تأیید ================= -->
+<div class="overlay" id="confirmOverlay" style="z-index:90">
+  <div class="modal small">
+    <div class="modal-bar mono"><span class="ltr">CONFIRM</span>
+      <button class="btn-ico" data-close="confirmOverlay" aria-label="بستن"><i data-lucide="x"></i></button></div>
+    <div class="modal-body">
+      <h4 id="cfTitle"></h4>
+      <p id="cfMsg"></p>
+      <div class="m-btns">
+        <button class="btn btn-ghost btn-sm" data-close="confirmOverlay">انصراف</button>
+        <button class="btn btn-sm" id="cfYes" style="background:var(--red);color:#fff;border-color:var(--red)">بله، انجام بده</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= پنل ادمین ================= -->
+<div class="pn" id="adminPanel">
+  <aside class="pn-side">
+    <div class="pn-brand ltr">TDR CLAN / ADMIN</div>
+    <nav class="pn-nav" id="pnNav"></nav>
+    <div class="pn-side-foot">
+      <button class="btn btn-ghost btn-sm" data-act="logout"><i data-lucide="log-out"></i>خروج</button>
+      <button class="btn btn-ghost btn-sm" data-act="close-panel"><i data-lucide="x"></i>بستن پنل</button>
+    </div>
+  </aside>
+  <main class="pn-main" id="adminBody"></main>
+</div>
+
+<script>
+/* ============================================================
+   کلن TDR — گیم اُپن‌فرانت | تک‌فایل، بدون فریم‌ورک
+   سازنده: امیرحسین
+   ============================================================ */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3);
+const fa=n=>Number(n).toLocaleString('fa-IR');
+const faDate=ts=>new Intl.DateTimeFormat('fa-IR',{year:'numeric',month:'long',day:'numeric'}).format(ts);
+const faTime=ts=>new Intl.DateTimeFormat('fa-IR',{hour:'2-digit',minute:'2-digit'}).format(ts);
+const icons=()=>lucide.createIcons();
+const DAY=86400000;
+
+/* ---------- داده‌های نمونه ---------- */
+const seed=()=>({
+  news:[
+    {id:uid(),featured:true,cat:'تورنمنت',ts:Date.now()-1*DAY,
+     title:'تورنمنت فصلی کلن TDR اعلام شد؛ ۱۶ صندلی و جام قهرمانی',
+     summary:'تورنمنت رسمی فصل کلن TDR جمعه ساعت ۲۱ برگزار می‌شود؛ ۱۶ بازیکن، نقشه استاندارد و ساختار حذفی کامل.',
+     body:'موعد رسید: جمعه این هفته ساعت ۲۱، ۱۶ نفر از اعضای کلن TDR در نقشه‌ی استاندارد به مصاف هم می‌روند. ساختار مسابقه حذفی کامل است؛ هر دور یک نقشه، بازنده حذف و برنده یک قدم به جام نزدیک‌تر می‌شود.\n\nقوانین ساده اما سخت‌گیرانه است: در دو دور اول اتحاد مجاز است، اما از نیمه‌نهایی همه علیه همه. استفاده از حساب دوم ممنوع و باعث حذف دائمی می‌شود. همه‌ی نتایج دورها در لیدربورد سایت ثبت می‌شود و برنده ۵ برد امتیازی جایزه می‌گیرد.\n\nبرای ثبت‌نام کافی است تا پنجشنبه شب آی‌دی بازی خود را در کانال روبیکا ارسال کنید؛ ۱۶ نفر اول جا دارند. قرعه‌کشی جمعه ظهر به‌صورت زنده در کانال انجام می‌شود. قهرمان علاوه بر جام، نشان ویژه در لیدربورد و معرفی اختصاصی در کانال می‌گیرد.'},
+    {id:uid(),featured:false,cat:'به‌روزرسانی',ts:Date.now()-3*DAY,
+     title:'به‌روزرسانی جدید بازی: تعادل حملات و هزینه‌ی پیشروی تغییر کرد',
+     summary:'در جدیدترین به‌روزرسانی، سرعت پیشروی قلمرو در اوایل بازی کمتر و هزینه‌ی حمله به قلمروهای بزرگ‌تر بیشتر شده است.',
+     body:'در آخرین پچ بازی دو تغییر مهم در تعادل اعمال شد: پیشروی در دقیقه‌های اول کندتر شده تا همه فرصت برابر برای ساخت اقتصاد داشته باشند، و حمله به قلمروهایی که چند برابر شما وسعت دارند، طلا و ارتش بیشتری می‌بلعد.\n\nبازخورد اولیه‌ی اعضای TDR نشان می‌دهد حمله‌های خیلی زودهنگام کمتر شده و بازی‌ها استراتژیک‌تر از قبل‌اند. اگر با نسخه‌ی قبلی راحت بودید، لازم نیست نگران باشید؛ هسته‌ی بازی دست‌نخورده مانده.\n\nاگر باگ یا مشکل تعادلی دیدید، آن را در مخزن گیت‌هاب پروژه گزارش کنید؛ لینکش در بخش لینک‌ها هست. گزارش‌های اعضای کلن تا امروز چند باگ مهم را شکار کرده‌اند!'},
+    {id:uid(),featured:false,cat:'راهنما',ts:Date.now()-5*DAY,
+     title:'راهنمای مبتدی‌های TDR: از اولین پایه تا کنترل نقشه',
+     summary:'اگر تازه به کلن و بازی اوپن‌فرانت پیوسته‌اید، این پنج قانون ساده مسیر شما را هموار می‌کند.',
+     body:'اوپن فرانت ظاهر ساده‌ای دارد اما زیر آن یک بازی عمیق است. قانون اول: قبل از هر حمله، اقتصاد بسازید — هر خانه‌ی قلمرو شما درآمد طلا دارد و طلا یعنی ارتش. قانون دوم: هرگز به قلمرویی که بزرگ‌تر از شماست حمله نکنید، مگر با اتحاد.\n\nقانون سوم: جبهه‌ی خود را کوتاه نگه دارید؛ مرز طولانی یعنی ضعف در همه‌جا. قانون چهارم: اول با بات‌ها تمرین کنید تا سرعت تصمیم‌گیری‌تان بالا برود. قانون پنجم: حریفِ عصبانی، حریفِ باخته هم هست؛ آرامش نیمی از پیروزی است.\n\nاعضای باتجربه‌ی کلن در اتاق گفتگوی سایت آماده‌ی پاسخ‌گویی هستند. سؤالتان را بپرسید و برای تمرین، هم‌تیمی در کانال پیدا کنید.'},
+    {id:uid(),featured:false,cat:'استراتژی',ts:Date.now()-7*DAY,
+     title:'اقتصاد طلا؛ ستون فقرات هر پیروزی',
+     summary:'بازیکنانی که در دقایق اول روی درآمد تمرکز می‌کنند، در دقایق آخر نقشه را می‌بُرند. نگاهی دقیق به مدیریت منابع.',
+     body:'در اوپن فرانت طلا همه‌چیز است: ارتش می‌سازد، سرزمین باز می‌کند و اتحاد می‌خرد. اما خیلی‌ها همین طلای حیاتی را در دقایق اول خرج حمله‌های کوچک و بی‌فایده می‌کنند و وسط بازی بی‌پول می‌مانند.\n\nقاعده‌ی طلایی: تا وقتی نسبت درآمد به هزینه‌تان سالم نیست، حمله نکنید. ابتدا قلمرو را در جهتی گسترش دهید که خانه‌های خالی بیشتری دارد، سپس با درآمد پایدار ارتش ذخیره بسازید. لحظه‌ی درست حمله معمولاً وقتی است که دو حریف مشغول جنگ با هم‌اند.\n\nدر تورنمنت‌های کلن، تقریباً همه‌ی برنده‌ها بازیکنانی بودند که نیمه‌ی اول را آرام و اقتصادی بازی کردند. صبر یک استراتژی است، نه ضعف.'},
+    {id:uid(),featured:false,cat:'استراتژی',ts:Date.now()-9*DAY,
+     title:'هنر دیپلماسی: اتحاد بساز، اما هرگز غافلگیر نشو',
+     summary:'اتحادها در اوپن فرانت تا وقتی کار می‌کنند که... نوبت خیانت نشود. مروری بر مهارت فراموش‌شده‌ی مذاکره روی نقشه.',
+     body:'هیچ‌کس در اوپن فرانت به‌تنهایی قهرمان نمی‌شود. اتحاد درست به شما اجازه می‌دهد حریف‌های بزرگ‌تر را تکه‌تکه کنید و نقشه را بدون جنگ مستقیم تقسیم کنید. اما اتحاد در این بازی یک تاریخ انقضا دارد.\n\nسه اصل دیپلماسی کلن: اول، هرگز پشت به متحد نکنید، ولی چشم هم بردارید. دوم، اتحاد با قوی‌ترین بازیکن یعنی پیروزی برای او؛ اتحاد با بازیکن هم‌سطح خودتان منطقی‌تر است. سوم، وقتی تصمیم به جدایی گرفتید، یک‌ضرب و کامل بزنید — حمله‌ی نصفه‌نیمه یعنی ساختن دشمن دائمی.\n\nاعضای TDR قبل از تورنمنت‌ها در نقشه‌های تمرینی اتحاد تمرین می‌کنند؛ برای هماهنگی به اتاق گفتگو سر بزنید.'},
+    {id:uid(),featured:false,cat:'راهنما',ts:Date.now()-11*DAY,
+     title:'بازی‌های ۱v۱؛ مدرسه‌ی واقعی اوپن‌فرانت + ثبت در لیدربورد',
+     summary:'اگر می‌خواهید سریع حرفه‌ای شوید، نقشه‌های کوچک را جدی بگیرید؛ و هر برد ۱v۱ را برای لیدربورد کلن ثبت کنید.',
+     body:'نقشه‌های بزرگ صبر می‌خواهند، اما نقشه‌های کوچک سرعت. در بازی‌های ۱v۱ هر ثانیه یک تصمیم است: کجا حمله کنم، کجا عقب بکشم، کی پول بسازم. همین فشار است که بازیکن متوسط را حرفه‌ای می‌کند.\n\nدر نقشه‌ی کوچک، شروع سریع حیاتیه؛ خانه‌های مرکزی ارزش بیشتری دارند و کنترل مرکز یعنی کنترل بازی. اما مراقب باشید: وسط نقشه از هر چهار جهت قابل حمله است.\n\nپیشنهاد ما: هفته‌ای چند دور ۱v۱ با اعضای کلن بازی کنید و نتیجه را در کانال اعلام کنید تا در لیدربورد سایت ثبت شود. رقابت روی جدول، انگیزه‌ی تمرین را چند برابر می‌کند!'},
+    {id:uid(),featured:false,cat:'تورنمنت',ts:Date.now()-13*DAY,
+     title:'نتایج تورنمنت قبلی کلن اعلام شد؛ قهرمانی در آخرین لحظه!',
+     summary:'فینال فصل قبل با یک برگشت تاریخی تمام شد؛ بازیکنی که تا نیمه‌ی بازی نصف نقشه‌اش را از دست داده بود، جام را بالا برد.',
+     body:'فینال تورنمنت قبلی کلن TDR یکی از به‌یادماندنی‌ترین بازی‌های تاریخ ما بود. در دقیقه‌ی دوازدهم به نظر می‌رسید همه‌چیز تمام است؛ قهرمان نهایی فقط یک‌سوم قلمرو اولیه‌اش را داشت و دو حریف مشغول تقسیم بقیه‌اش بودند.\n\nاما حرفه‌ای‌ها می‌دانند: تا خانه‌ی آخر شما روی نقشه هست، بازی تمام نشده. با یک اتحاد به‌موقع و دو حمله‌ی دقیقاً زمان‌بندی‌شده، مسیر بازی یک‌شبه برگشت. ویدیوی کامل این بازی در کانال منتشر شده است.\n\nنکته‌ی مهم: امتیازات این تورنمنت در لیدربورد سایت ثبت شده و رقابت برای صدر جدول ادامه دارد. تورنمنت بعدی جمعه‌ی همین هفته است؛ فرم ثبت‌نام در کانال پین شده است.'}
+  ],
+  links:[
+    {id:uid(),name:'شروع بازی اوپن فرانت',url:'https://openfront.io',cat:'بازی',desc:'ورود مستقیم به بازی در مرورگر؛ بدون نصب و بدون پرداخت — اسمت را بگذار و نقشه را فتح کن.'},
+    {id:uid(),name:'مخزن رسمی گیت‌هاب (OpenFrontIO)',url:'https://github.com/openfrontio/OpenFrontIO',cat:'سورس‌باز',desc:'کد کامل بازی متن‌باز است؛ می‌توانید توسعه‌اش دهید، ماژول بنویسید یا کد را بخوانید.'},
+    {id:uid(),name:'گزارش باگ و پیشنهاد قابلیت',url:'https://github.com/openfrontio/OpenFrontIO/issues',cat:'سورس‌باز',desc:'هر باگ یا ایده‌ای دارید همین‌جا ثبت کنید؛ گزارش‌های جامعه مستقیم خوانده می‌شود.'},
+    {id:uid(),name:'کانال روبیکا کلن TDR',url:'https://rubika.ir/opnferoant_tdr',cat:'جامعه',desc:'خانه‌ی اصلی کلن TDR: اخبار روز، نتایج تورنمنت، اطلاعیه‌ها و هماهنگی اعضا.'},
+    {id:uid(),name:'ثبت نتیجه برای لیدربورد',url:'https://rubika.ir/opnferoant_tdr',cat:'جامعه',desc:'نتیجه‌ی برد خود را در کانال بفرستید تا مدیر آن را در لیدربورد سایت ثبت کند.'},
+    {id:uid(),name:'راهنمای شروع سریع به فارسی',url:'https://rubika.ir/opnferoant_tdr',cat:'راهنما',desc:'سری پست‌های تصویری کانال برای تازه‌واردهای کلن؛ از اولین پایه تا اولین فتح بزرگ.'},
+    {id:uid(),name:'ویدیوهای آموزشی و ریپلی‌ها',url:'https://rubika.ir/opnferoant_tdr',cat:'راهنما',desc:'تحلیل بازی‌های قهرمانان و ترفندهای حرفه‌ای، ویدیو به ویدیو در کانال.'},
+    {id:uid(),name:'آرشیو تورنمنت‌های کلن',url:'https://rubika.ir/opnferoant_tdr',cat:'تورنمنت',desc:'نتایج، جدول امتیازها و ویدیوی کامل دورهای حذفی همه‌ی تورنمنت‌های گذشته TDR.'},
+    {id:uid(),name:'ثبت‌نام تورنمنت هفتگی',url:'https://rubika.ir/opnferoant_tdr',cat:'تورنمنت',desc:'آی‌دی بازی‌تان را تا پنجشنبه شب در کانال بفرستید؛ ۱۶ نفر، نقشه استاندارد.'},
+    {id:uid(),name:'territorial.io',url:'https://territorial.io',cat:'بازی هم‌خانواده',desc:'پیشگام سبک فتح خاک در مرورگر؛ برای تمرین مفاهیم مشابه و رقابت جهانی.'}
+  ],
+  board:[
+    {id:uid(),name:'امیرحسین',clan:'TDR',wins:41,games:58,tag:'سازنده سایت'},
+    {id:uid(),name:'سینا',clan:'TDR',wins:35,games:54,tag:'کاپیتان'},
+    {id:uid(),name:'نگار',clan:'TDR',wins:29,games:47,tag:''},
+    {id:uid(),name:'آرش',clan:'TDR',wins:24,games:40,tag:''},
+    {id:uid(),name:'نیلوفر',clan:'TDR',wins:19,games:33,tag:''},
+    {id:uid(),name:'میلاد',clan:'TDR',wins:12,games:25,tag:''},
+    {id:uid(),name:'رها',clan:'',wins:8,games:18,tag:''},
+    {id:uid(),name:'سپهر',clan:'',wins:5,games:14,tag:''}
+  ],
+  chat:[
+    {id:uid(),name:'امیرحسین',color:'#ffb224',ts:Date.now()-44*60000,text:'به اتاق گفتگوی کلن TDR خوش آمدید! هر سؤالی درباره‌ی بازی دارید بپرسید؛ نتیجه‌ی برد‌هاتون رو هم بفرستید تا تو لیدربورد ثبت بشه.'},
+    {id:uid(),name:'نگار',color:'#a3be6a',ts:Date.now()-36*60000,text:'تازه به کلن اضافه شدم؛ اولین بازی‌هام همیشه دو دقیقه‌ای تموم می‌شد!'},
+    {id:uid(),name:'امیرحسین',color:'#ffb224',ts:Date.now()-32*60000,text:'خوش اومدی نگار! راهنمای مبتدی‌ها رو تو بخش لینک‌ها ببین؛ اول اقتصاد، بعد حمله. بعدش بیا یه ۱v۱ تمرینی با هم بزنیم.'},
+    {id:uid(),name:'سینا',color:'#7fb8b8',ts:Date.now()-14*60000,text:'جمعه ساعت ۹ تورنمنت کلن هست؛ اسمتون رو تو کانال ثبت کنید. رقابت صدر لیدربورد داغه!'}
+  ],
+  settings:{
+    password:'openfront',
+    heroKicker:'کلن TDR · کانال روبیکا',
+    heroTitle:'کلن TDR اینجاست؛\n*تا آخرین خانه می‌جنگیم.*',
+    heroSub:'خانه‌ی کلن TDR در گیم ایرانی «اُپن‌فرانت» — اخبار، لیدربورد بازیکنان، تورنمنت و راهنما؛ همراه کانال روبیکا.',
+    rubikaLabel:'ورود به کانال کلن TDR',
+    rubikaUrl:'https://rubika.ir/opnferoant_tdr',
+    gameUrl:'https://openfront.io'
+  },
+  log:[{ts:Date.now(),text:'راه‌اندازی اولیه سایت کلن TDR و بارگذاری داده‌های نمونه'}]
+});
+
+/* ---------- بارگذاری و ذخیره ---------- */
+const LS='openfront_tdr_db_v1';
+let db=(function(){
+  try{const d=JSON.parse(localStorage.getItem(LS));if(d&&Array.isArray(d.news)&&d.settings)return d;}catch(e){}
+  const s=seed();localStorage.setItem(LS,JSON.stringify(s));return s;
+})();
+function save(){localStorage.setItem(LS,JSON.stringify(db));}
+function addLog(text){db.log.unshift({ts:Date.now(),text});db.log=db.log.slice(0,20);}
+
+/* ---------- توست و تأیید ---------- */
+function toast(msg,type='ok'){
+  const t=document.createElement('div');t.className='toast '+type;
+  t.innerHTML='<i data-lucide="'+(type==='ok'?'check-circle-2':'alert-triangle')+'"></i><span>'+esc(msg)+'</span>';
+  $('toasts').appendChild(t);icons();
+  requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),320);},3400);
+}
+let cfCb=null;
+function askConfirm(title,msg,cb){
+  $('cfTitle').textContent=title;$('cfMsg').textContent=msg;cfCb=cb;
+  $('confirmOverlay').classList.add('show');
+}
+ $('cfYes').addEventListener('click',()=>{const c=cfCb;closeOverlay('confirmOverlay');c&&c();});
+
+function closeOverlay(id){$(id).classList.remove('show');}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeOverlay(b.dataset.close)));
+['newsOverlay','loginOverlay','confirmOverlay'].forEach(id=>{
+  $(id).addEventListener('click',e=>{if(e.target===$(id))closeOverlay(id);});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  ['confirmOverlay','loginOverlay','newsOverlay'].forEach(id=>{if($(id).classList.contains('show'))closeOverlay(id);});
+});
+
+/* ---------- رندر عمومی ---------- */
+function heroTitleHTML(t){
+  return esc(t).replace(/\*(.+?)\*/g,'<span class="hl">$1</span>').replace(/\n/g,'<br>');
+}
+function renderHero(){
+  const s=db.settings;
+  $('heroKicker').textContent=s.heroKicker;
+  $('heroTitle').innerHTML=heroTitleHTML(s.heroTitle);
+  $('heroSub').textContent=s.heroSub;
+  $('heroCta').href=s.rubikaUrl;$('heroCtaLabel').textContent=s.rubikaLabel;
+  $('heroPlay').href=s.gameUrl;
+  $('ctaLink').href=s.rubikaUrl;$('ctaLinkLabel').textContent=s.rubikaLabel;
+  $('ctaTitle').textContent='به کلن TDR بپیوندید';
+  $('ctaText').textContent='نبرد با اعضای کلن، ثبت‌نام تورنمنت و صدرنشینی در لیدربورد — همه از کانال روبیکا شروع می‌شود.';
+  $('footRubika').href=s.rubikaUrl;
+  $('footPlay').href=s.gameUrl;
+  $('footYear').textContent=new Intl.DateTimeFormat('fa-IR',{year:'numeric'}).format(new Date());
+}
+function renderStats(){
+  $('stNews').textContent=fa(db.news.length);
+  $('stLinks').textContent=fa(db.links.length);
+  $('stChat').textContent=fa(db.chat.length);
+  $('stWins').textContent=fa(db.board.reduce((s,p)=>s+(+p.wins||0),0));
+}
+function renderTicker(){
+  const items=db.news.slice(0,8);
+  const one=items.map(n=>'<span class="tk-item">'+esc(n.title)+'<i class="sep">◆</i></span>').join('');
+  $('tickerTrack').innerHTML=one+one;
+}
+
+/* ---------- اخبار ---------- */
+function renderNews(){
+  const list=[...db.news].sort((a,b)=>b.ts-a.ts);
+  $('newsHint').textContent=list.length+' ITEMS';
+  const feat=list.find(n=>n.featured)||list[0];
+  const rest=list.filter(n=>n!==feat);
+  if(feat){
+    $('featBox').innerHTML='<article class="feat" data-news="'+feat.id+'">'
+      +'<div class="feat-meta"><span>FEATURED</span><span>'+esc(feat.cat)+'</span><span>'+faDate(feat.ts)+'</span></div>'
+      +'<h3>'+esc(feat.title)+'</h3><p>'+esc(feat.summary)+'</p>'
+      +'<span class="read">خواندن خبر<i data-lucide="arrow-left"></i></span></article>';
+  }else{
+    $('featBox').innerHTML='<div class="empty">هنوز اطلاعیه‌ای منتشر نشده؛ از پنل مدیریت اولین خبر را اضافه کنید.</div>';
+  }
+  $('newsList').innerHTML=rest.map((n,i)=>
+    '<div class="nrow" data-news="'+n.id+'">'
+    +'<span class="nrow-num">'+String(i+2).padStart(2,'0')+'</span>'
+    +'<div><h4>'+esc(n.title)+'</h4><p>'+esc(n.summary)+'</p></div>'
+    +'<div class="nrow-side"><span class="cat">'+esc(n.cat)+'</span><span>'+faDate(n.ts)+'</span></div>'
+    +'</div>').join('');
+  icons();
+}
+function openNews(id){
+  const n=db.news.find(x=>x.id===id);if(!n)return;
+  $('newsModalTag').textContent='news/'+n.id.slice(0,6);
+  $('newsModalBody').innerHTML='<h3>'+esc(n.title)+'</h3>'
+    +'<div class="m-meta">'+esc(n.cat)+' · '+faDate(n.ts)+'</div>'
+    +n.body.split('\n\n').map(p=>'<p>'+esc(p)+'</p>').join('');
+  $('newsOverlay').classList.add('show');
+}
+ $('newsSec').addEventListener('click',e=>{
+  const r=e.target.closest('[data-news]');if(r)openNews(r.dataset.news);
+});
+
+/* ---------- لینک‌ها و راهنماها ---------- */
+let linkFilter='همه';
+function renderLinks(){
+  const cats=['همه',...new Set(db.links.map(l=>l.cat))];
+  $('linkTabs').innerHTML=cats.map(c=>
+    '<button class="tab'+(c===linkFilter?' on':'')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>').join('');
+  const list=db.links.filter(l=>linkFilter==='همه'||l.cat===linkFilter);
+  $('linksHint').textContent=list.length+' LINKS';
+  $('linkList').innerHTML=list.length?list.map((l,i)=>{
+    let dom=l.url;try{dom=new URL(l.url).hostname.replace('www.','');}catch(e){}
+    return '<a class="lrow" href="'+esc(l.url)+'" target="_blank" rel="noopener">'
+      +'<span class="num">'+String(i+1).padStart(2,'0')+'</span>'
+      +'<div><h4>'+esc(l.name)+'<span class="dom">'+esc(dom)+'</span></h4><p>'+esc(l.desc)+'</p></div>'
+      +'<span class="go"><i data-lucide="arrow-up-left"></i></span></a>';
+  }).join(''):'<div class="empty">لینکی در این دسته نیست.</div>';
+  icons();
+}
+ $('linkTabs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-cat]');if(b){linkFilter=b.dataset.cat;renderLinks();}
+});
+
+/* ---------- لیدربورد ---------- */
+let boardFilter='همه';
+function renderBoard(){
+  const list=[...db.board].sort((a,b)=>(b.wins||0)-(a.wins||0));
+  $('boardHint').textContent=list.length+' PLAYERS';
+  const tdr=list.filter(p=>(p.clan||'').toUpperCase()==='TDR');
+  const totalWins=list.reduce((s,p)=>s+(+p.wins||0),0);
+  const totalGames=list.reduce((s,p)=>s+(+p.games||0),0);
+  $('boardStats').innerHTML=
+    '<div><b>'+fa(tdr.length)+'</b><span>عضو کلن TDR</span></div>'
+   +'<div><b>'+fa(totalWins)+'</b><span>برد ثبت‌شده کلن</span></div>'
+   +'<div><b>'+fa(totalGames)+'</b><span>بازی انجام‌شده</span></div>'
+   +'<div><b>'+fa(list.length)+'</b><span>بازیکن در جدول</span></div>';
+  const clans=['همه',...new Set(list.map(p=>p.clan||'مستقل'))];
+  $('boardTabs').innerHTML=clans.map(c=>
+    '<button class="tab'+(c===boardFilter?' on':'')+'" data-bclan="'+esc(c)+'">'+esc(c)+'</button>').join('');
+  const fl=list.filter(p=>boardFilter==='همه'||(p.clan||'مستقل')===boardFilter);
+  const maxRate=Math.max(1,...fl.map(p=>p.games?(p.wins/p.games*100):0));
+  $('boardList').innerHTML=fl.length?fl.map((p,i)=>{
+    const rank=i+1,rcls=rank<=3?' r'+rank:'';
+    const rate=p.games?Math.round(p.wins/p.games*100):0;
+    const isTDR=(p.clan||'').toUpperCase()==='TDR';
+    return '<div class="brow'+rcls+'">'
+      +'<span class="rk">'+String(rank).padStart(2,'0')+'</span>'
+      +'<div class="who"><strong>'+esc(p.name)
+        +(p.tag?'<span class="badge">'+esc(p.tag)+'</span>':'')
+        +(p.clan?'<span class="clan'+(isTDR?'':' other')+'">'+esc(p.clan)+'</span>':'')
+      +'</strong><p>'+(p.games?fa(p.wins)+' برد از '+fa(p.games)+' بازی':'هنوز بازی‌ای ثبت نشده')+'</p></div>'
+      +'<div class="wins"><b>'+fa(p.wins)+'</b><span>برد</span></div>'
+      +'<div class="rate"><span class="ltr">'+rate+'% WIN RATE</span><div class="bar"><i style="width:'+(rate/maxRate*100)+'%"></i></div></div>'
+      +'</div>';
+  }).join(''):'<div class="empty">بازیکنی در این دسته نیست.</div>';
+}
+ $('boardSec').addEventListener('click',e=>{
+  const b=e.target.closest('[data-bclan]');if(b){boardFilter=b.dataset.bclan;renderBoard();}
+});
+
+/* ---------- گفتگو ---------- */
+let me=null;
+try{me=JSON.parse(localStorage.getItem('openfront_me')||'null');}catch(e){}
+const AVATAR_COLORS=['#ffb224','#e4572e','#a3be6a','#7fb8b8','#d3869b','#c8a2c8'];
+let pickedColor=AVATAR_COLORS[0];
+
+function renderChat(){
+  const area=$('chatArea');
+  if(!me){
+    area.innerHTML='<div class="chat-box"><div class="chat-bar mono"><b># گفتگوی کلن TDR</b><span class="ltr">'+db.chat.length+' MSGS</span></div>'
+      +'<div class="chat-join"><span class="big-i"><i data-lucide="user-round"></i></span>'
+      +'<h4>به گفتگو بپیوندید</h4><p>یک نام مستعار انتخاب کنید؛ بدون ثبت‌نام و ایمیل.</p>'
+      +'<input class="inp" id="joinName" maxlength="24" placeholder="نام مستعار شما">'
+      +'<div class="swatches" id="swatches">'+AVATAR_COLORS.map((c,i)=>
+        '<button class="swatch'+(i===0?' on':'')+'" data-c="'+c+'" style="background:'+c+'" aria-label="رنگ"></button>').join('')+'</div>'
+      +'<button class="btn btn-solid" id="joinBtn"><i data-lucide="messages-square"></i>ورود به گفتگو</button></div></div>';
+    icons();
+    $('swatches').addEventListener('click',e=>{
+      const b=e.target.closest('.swatch');if(!b)return;
+      pickedColor=b.dataset.c;
+      document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on',s===b));
+    });
+    const doJoin=()=>{
+      const name=($('joinName').value||'').trim();
+      if(name.length<2){toast('نام مستعار باید حداقل ۲ حرف باشد.','err');return;}
+      me={name,color:pickedColor};
+      localStorage.setItem('openfront_me',JSON.stringify(me));
+      renderChat();toast('خوش آمدی، '+name+'!');
+    };
+    $('joinBtn').addEventListener('click',doJoin);
+    $('joinName').addEventListener('keydown',e=>{if(e.key==='Enter')doJoin();});
+    return;
+  }
+  area.innerHTML='<div class="chat-box"><div class="chat-bar mono"><b># گفتگوی کلن TDR</b>'
+    +'<span class="chat-me-tools"><span class="ltr">'+db.chat.length+' MSGS</span>'
+    +'<button id="renameBtn" type="button"><i data-lucide="user-cog"></i>تغییر هویت</button></span></div>'
+    +'<div class="chat-log" id="chatLog"></div>'
+    +'<form class="chat-input" id="chatForm"><input class="inp" id="chatText" autocomplete="off" placeholder="پیام‌تان را بنویسید…" maxlength="500">'
+    +'<button class="btn btn-solid" type="submit"><i data-lucide="send"></i>ارسال</button></form></div>';
+  icons();
+  renderChatLog();
+  $('renameBtn').addEventListener('click',()=>{
+    me=null;localStorage.removeItem('openfront_me');renderChat();
+  });
+  $('chatForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const text=($('chatText').value||'').trim();if(!text)return;
+    db.chat.push({id:uid(),name:me.name,color:me.color,text,ts:Date.now()});
+    if(db.chat.length>200)db.chat=db.chat.slice(-200);
+    save();$('chatText').value='';renderChatLog();
+    $('chatLog').scrollTop=$('chatLog').scrollHeight;
+    renderStats();
+  });
+}
+function renderChatLog(){
+  const log=$('chatLog');
+  log.innerHTML=db.chat.map(m=>{
+    const mine=me&&m.name===me.name&&m.color===me.color;
+    return '<div class="msg'+(mine?' mine':'')+'">'
+      +'<div class="msg-head"><b style="color:'+esc(m.color)+'">'+esc(m.name)+'</b><span>'+faTime(m.ts)+'</span></div>'
+      +'<p>'+esc(m.text)+'</p></div>';
+  }).join('')||'<div class="empty">اولین پیام را شما بفرستید.</div>';
+  log.scrollTop=log.scrollHeight;
+}
+
+/* ============================================================
+   نقشه نبرد زنده — شبیه‌سازی فتح قلمرو
+   ============================================================ */
+(function(){
+  const cv=$('bmap');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const lbEl=$('blead'),feedEl=$('bfeed'),joinBtn=$('bjoinBtn'),resetBtn=$('bresetBtn');
+  const CELL=6;
+  const PAL=['#e4572e','#7fb069','#7fb8b8','#d3869b','#c8a2c8','#a3be6a','#5aa9e6','#b48ead'];
+  const BNAMES=['امیرحسین','آرتا','شاهین','پارسا','درنا','کیان','رها','سام','آرش','نیلوفر','میلاد','سپهر'];
+  let ni=0,ci=0;
+  let cols=0,rows=0,cells=null,players=[],me=null,feed=[],tickN=0,visible=true;
+
+  const hexA=(hex,a)=>{
+    const n=parseInt(hex.slice(1),16);
+    return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';
+  };
+  function feedAdd(text){
+    const d=new Date();
+    feed.unshift({t:d,text});feed=feed.slice(0,5);
+    feedEl.innerHTML=feed.map(f=>
+      '<div class="feed-row"><span class="mono ltr">'
+      +String(f.t.getHours()).padStart(2,'0')+':'+String(f.t.getMinutes()).padStart(2,'0')
+      +'</span><span>'+esc(f.text)+'</span></div>').join('');
+  }
+  function size(){
+    const r=cv.parentElement.getBoundingClientRect();
+    const dpr=window.devicePixelRatio||1;
+    cv.width=Math.max(1,Math.round(r.width*dpr));
+    cv.height=Math.max(1,Math.round(r.height*dpr));
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    cols=Math.max(24,Math.floor(r.width/CELL));
+    rows=Math.max(16,Math.floor(r.height/CELL));
+  }
+  function freeCell(){
+    for(let t=0;t<300;t++){
+      const i=Math.floor(Math.random()*cells.length);
+      if(cells[i]===0)return i;
+    }
+    return -1;
+  }
+  function spawnBotBlob(slot,c){
+    const x0=c%cols,y0=(c/cols)|0;
+    for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+      if(dx*dx+dy*dy>5)continue;
+      const x=x0+dx,y=y0+dy;
+      if(x<0||y<0||x>=cols||y>=rows)continue;
+      const i=y*cols+x;
+      if(cells[i]===0)cells[i]=slot+1;
+    }
+  }
+  function spawn(isMe,at){
+    if(!cells)return;
+    let slot;
+    if(isMe&&me)slot=players.indexOf(me);
+    else slot=players.findIndex(p=>!p.alive&&!p.isMe);
+    if(slot<0&&players.length<14){slot=players.length;players.push({idx:slot+1,alive:false,isMe:false});}
+    if(slot<0)return;
+    const name=isMe?'شما':BNAMES[(ni++)%BNAMES.length];
+    const color=isMe?'#ffb224':PAL[(ci++)%PAL.length];
+    players[slot]={idx:slot+1,name,color,alive:true,isMe:!!isMe};
+    const c=(at>=0&&cells[at]===0)?at:freeCell();
+    if(c<0){players[slot].alive=false;return;}
+    spawnBotBlob(slot,c);
+    if(isMe){
+      me=players[slot];
+      joinBtn.innerHTML='<i data-lucide="flag-off"></i>ترک نبرد';icons();
+      feedAdd('«شما» وارد نبرد شدید');
+    }else{
+      feedAdd('«'+name+'» وارد نبرد شد');
+    }
+  }
+  function leave(){
+    if(!me||!me.alive)return;
+    for(let i=0;i<cells.length;i++)if(cells[i]===me.idx)cells[i]=0;
+    me.alive=false;
+    feedAdd('«شما» از نبرد خارج شدید');
+    joinBtn.innerHTML='<i data-lucide="flag"></i>پیوستن دوباره';icons();
+  }
+  joinBtn.addEventListener('click',()=>{(me&&me.alive)?leave():spawn(true,-1);});
+  resetBtn.addEventListener('click',()=>{
+    players=[];me=null;feed=[];
+    cells=new Uint8Array(cols*rows);
+    feedAdd('نقشه‌ی تازه‌ای چیده شد');
+    initBots(5);
+    joinBtn.innerHTML='<i data-lucide="flag"></i>پیوستن به نبرد';icons();
+  });
+  cv.addEventListener('click',e=>{
+    if(me&&me.alive)return;
+    const r=cv.getBoundingClientRect();
+    const x=Math.floor((e.clientX-r.left)/CELL),y=Math.floor((e.clientY-r.top)/CELL);
+    if(x<0||y<0||x>=cols||y>=rows)return;
+    spawn(true,y*cols+x);
+  });
+
+  function initBots(n){for(let k=0;k<n;k++)spawn(false,-1);}
+
+  function step(){
+    if(!cells||!visible)return;
+    tickN++;
+    const P=players.length;
+    const counts=new Array(P+1).fill(0);
+    const cx=new Array(P+1).fill(0),cy=new Array(P+1).fill(0),cn=new Array(P+1).fill(0);
+    const mask=new Uint8Array(cells.length);
+    const borders=[];for(let i=0;i<=P;i++)borders.push([]);
+    for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){
+      const i=y*cols+x,o=cells[i];
+      if(!o){counts[0]++;continue;}
+      counts[o]++;cx[o]+=x;cy[o]+=y;cn[o]++;
+      const l=x>0?cells[i-1]:0,r=x<cols-1?cells[i+1]:0,
+            u=y>0?cells[i-cols]:0,d=y<rows-1?cells[i+cols]:0;
+      if(l!==o||r!==o||u!==o||d!==o){mask[i]=1;borders[o].push(i);}
+    }
+    const lastHit=new Array(P+1).fill(0);
+    for(let s=1;s<=P;s++){
+      const p=players[s-1];
+      if(!p||!p.alive||!counts[s])continue;
+      const bl=borders[s];
+      if(!bl.length)continue;
+      const tries=Math.min(46,2+Math.round(Math.sqrt(counts[s])*1.15));
+      for(let t=0;t<tries;t++){
+        const i=bl[(Math.random()*bl.length)|0];
+        const x=i%cols,y=(i/cols)|0;
+        const dirs=[];
+        if(x>0)dirs.push(i-1);
+        if(x<cols-1)dirs.push(i+1);
+        if(y>0)dirs.push(i-cols);
+        if(y<rows-1)dirs.push(i+cols);
+        const j=dirs[(Math.random()*dirs.length)|0];
+        const tgt=cells[j];
+        if(tgt===s)continue;
+        if(tgt===0){if(Math.random()<0.86)cells[j]=s;}
+        else{
+          const pw=counts[s]/Math.max(1,counts[tgt]);
+          if(Math.random()<Math.min(0.5,0.14+pw*0.05)){cells[j]=s;lastHit[tgt]=s;}
+        }
+      }
+    }
+    for(let s=1;s<=P;s++){
+      const p=players[s-1];
+      if(p&&p.alive&&!counts[s]){
+        p.alive=false;
+        const k=lastHit[s];
+        const kn=(k&&players[k-1])?players[k-1].name:'نقشه';
+        if(p.isMe){
+          feedAdd('حذف شدید! «'+kn+'» قلمروتان را گرفت');
+          joinBtn.innerHTML='<i data-lucide="flag"></i>پیوستن دوباره';icons();
+        }else{
+          feedAdd('«'+p.name+'» توسط «'+kn+'» حذف شد');
+        }
+      }
+    }
+    if(tickN%150===0){
+      const aliveBots=players.filter(p=>p.alive&&!p.isMe).length;
+      if(aliveBots<8&&counts[0]>cells.length*0.25)spawn(false,-1);
+    }
+    draw(counts,mask,cx,cy,cn);
+    if(tickN%7===0)leadboard(counts);
+  }
+
+  function draw(counts,mask,cx,cy,cn){
+    const w=cols*CELL,h=rows*CELL;
+    ctx.fillStyle='#0d0c09';ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#16130e';
+    for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){
+      if(cells[y*cols+x]===0)ctx.fillRect(x*CELL+1,y*CELL+1,CELL-2,CELL-2);
+    }
+    for(let i=0;i<cells.length;i++){
+      const o=cells[i];if(!o)continue;
+      const p=players[o-1];if(!p)continue;
+      const x=(i%cols)*CELL,y=((i/cols)|0)*CELL;
+      ctx.fillStyle=hexA(p.color,0.34);
+      ctx.fillRect(x,y,CELL,CELL);
+      if(mask[i]){ctx.fillStyle=p.color;ctx.fillRect(x,y,CELL,CELL);}
+    }
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='700 11px Vazirmatn';
+    for(let s=1;s<counts.length;s++){
+      if(!counts[s]||counts[s]<55||!players[s-1])continue;
+      ctx.fillStyle='rgba(15,14,11,.82)';
+      ctx.fillText(players[s-1].name,(cx[s]/cn[s])*CELL,(cy[s]/cn[s])*CELL);
+    }
+  }
+
+  function leadboard(counts){
+    const total=cols*rows||1;
+    const rows_=players.filter(p=>p.alive&&counts[p.idx]).sort((a,b)=>counts[b.idx]-counts[a.idx]);
+    let html=rows_.map(p=>{
+      const pct=counts[p.idx]/total*100;
+      return '<div class="lb-row'+(p.isMe?' me':'')+'"><div class="lb-top"><span class="lb-name">'+esc(p.name)
+        +'</span><span class="lb-pct">'+pct.toFixed(1)+'%</span></div><div class="lb-bar"><i style="width:'
+        +Math.min(100,pct)+'%;background:'+p.color+'"></i></div></div>';
+    }).join('');
+    const neu=counts[0]/total*100;
+    html+='<div class="lb-row"><div class="lb-top"><span class="lb-name" style="color:var(--mut)">بی‌طرف</span>'
+      +'<span class="lb-pct">'+neu.toFixed(1)+'%</span></div><div class="lb-bar"><i style="width:'+neu+'%;background:#2c2618"></i></div></div>';
+    lbEl.innerHTML=html||'<div class="hint">بازیکنی در نقشه نیست…</div>';
+  }
+
+  new IntersectionObserver(es=>{visible=es[0].isIntersecting;},{threshold:.02}).observe(cv);
+  setInterval(step,70);
+
+  let rto=null;
+  window.addEventListener('resize',()=>{
+    clearTimeout(rto);
+    rto=setTimeout(()=>{
+      size();cells=new Uint8Array(cols*rows);
+      players=[];me=null;initBots(5);
+      joinBtn.innerHTML='<i data-lucide="flag"></i>پیوستن به نبرد';icons();
+    },300);
+  });
+
+  size();
+  cells=new Uint8Array(cols*rows);
+  initBots(5);
+  feedAdd('جنگ قلمروهای TDR آغاز شد — با کلیک روی نقشه وارد شوید');
+})();
+
+/* ============================================================
+   پنل مدیریت
+   ============================================================ */
+const TABS=[
+  {id:'dash',label:'داشبورد',icon:'gauge'},
+  {id:'news',label:'اخبار و اطلاعیه‌ها',icon:'newspaper'},
+  {id:'links',label:'لینک‌ها و راهنماها',icon:'link'},
+  {id:'board',label:'لیدربورد',icon:'trophy'},
+  {id:'chat',label:'گفتگو',icon:'messages-square'},
+  {id:'settings',label:'تنظیمات و ظاهر',icon:'settings-2'},
+  {id:'backup',label:'پشتیبان‌گیری',icon:'database'}
+];
+let curTab='dash',formNewsId=null,formLinkId=null,formBoardId=null;
+
+const isAdmin=()=>sessionStorage.getItem('openfront_admin')==='1';
+function refreshAdminBtn(){$('adminBtnLabel').textContent=isAdmin()?'پنل مدیریت':'ورود مدیر';}
+ $('adminBtn').addEventListener('click',()=>{
+  if(isAdmin())openPanel();else{$('loginOverlay').classList.add('show');setTimeout(()=>$('loginPass').focus(),120);}
+});
+ $('loginForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if($('loginPass').value===db.settings.password){
+    sessionStorage.setItem('openfront_admin','1');
+    $('loginPass').value='';$('loginErr').textContent='';
+    closeOverlay('loginOverlay');refreshAdminBtn();openPanel();
+    toast('خوش آمدید، مدیر!');
+  }else{
+    $('loginErr').textContent='رمز عبور درست نیست.';
+    const m=$('loginOverlay').querySelector('.modal');
+    m.classList.remove('shake');void m.offsetWidth;m.classList.add('shake');
+  }
+});
+function openPanel(){
+  $('adminPanel').classList.add('open');document.body.style.overflow='hidden';
+  setTab('dash');
+}
+function closePanel(){
+  $('adminPanel').classList.remove('open');document.body.style.overflow='';
+}
+ $('pnNav').innerHTML=TABS.map((t,i)=>
+  '<button data-tab="'+t.id+'"><i data-lucide="'+t.icon+'"></i><span>'+t.label+'</span><span class="mono ltr">0'+(i+1)+'</span></button>').join('');
+ $('pnNav').addEventListener('click',e=>{
+  const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);
+});
+function setTab(id){
+  curTab=id;formNewsId=null;formLinkId=null;formBoardId=null;
+  document.querySelectorAll('#pnNav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));
+  renderAdminBody();
+}
+
+/* --- رندر بدنه پنل --- */
+function renderAdminBody(){
+  const B=$('adminBody');
+  if(curTab==='dash'){
+    const featCount=db.news.filter(n=>n.featured).length;
+    const boardWins=db.board.reduce((s,p)=>s+(+p.wins||0),0);
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">DASHBOARD</span><h3>نمای کلی کلن TDR</h3></div>'
+      +'<div class="a-stats">'
+      +'<div class="a-stat"><span class="cnt" data-to="'+db.news.length+'">۰</span><em>اطلاعیه منتشرشده ('+fa(featCount)+' ویژه)</em></div>'
+      +'<div class="a-stat"><span class="cnt" data-to="'+db.links.length+'">۰</span><em>لینک و راهنما</em></div>'
+      +'<div class="a-stat"><span class="cnt" data-to="'+db.board.length+'">۰</span><em>بازیکن در لیدربورد</em></div>'
+      +'<div class="a-stat"><span class="cnt" data-to="'+boardWins+'">۰</span><em>برد ثبت‌شده کلن</em></div>'
+      +'<div class="a-stat"><span>'+faDate(Date.now())+'</span><em>امروز</em></div></div>'
+      +'<div class="a-block"><h4><i data-lucide="zap"></i>اقدام سریع</h4><div style="display:flex;gap:10px;flex-wrap:wrap">'
+      +'<button class="btn btn-solid btn-sm" data-act="goto-news-new"><i data-lucide="plus"></i>اطلاعیه جدید</button>'
+      +'<button class="btn btn-ghost btn-sm" data-act="goto-board-new"><i data-lucide="trophy"></i>ثبت بازیکن در لیدربورد</button>'
+      +'<button class="btn btn-ghost btn-sm" data-act="goto-link-new"><i data-lucide="plus"></i>لینک جدید</button>'
+      +'<button class="btn btn-ghost btn-sm" data-act="tab-backup"><i data-lucide="download"></i>پشتیبان‌گیری</button>'
+      +'<a class="btn btn-ghost btn-sm" href="'+esc(db.settings.gameUrl)+'" target="_blank" rel="noopener"><i data-lucide="play"></i>شروع بازی</a>'
+      +'<a class="btn btn-ghost btn-sm" href="'+esc(db.settings.rubikaUrl)+'" target="_blank" rel="noopener"><i data-lucide="send"></i>کانال روبیکا</a></div></div>'
+      +'<div class="a-block"><h4><i data-lucide="history"></i>آخرین فعالیت‌ها</h4>'
+      +(db.log.map(l=>'<div class="log-row"><span class="mono ltr">'+new Date(l.ts).toLocaleDateString('fa-IR')+' '+faTime(l.ts)+'</span><span>'+esc(l.text)+'</span></div>').join('')||'<div class="empty">فعالیتی ثبت نشده.</div>')+'</div>';
+    icons();
+    B.querySelectorAll('.cnt').forEach(el=>{
+      const to=+el.dataset.to,t0=performance.now();
+      (function f(t){const p=Math.min(1,(t-t0)/750);
+        el.textContent=fa(Math.round(to*(p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2)));
+        if(p<1)requestAnimationFrame(f);})(t0);
+    });
+  }
+  else if(curTab==='news'){
+    let form='';
+    if(formNewsId){
+      const n=formNewsId==='new'?null:db.news.find(x=>x.id===formNewsId);
+      form='<form class="f-form" data-form="news" data-id="'+(n?n.id:'')+'">'
+        +'<h4>'+(n?'ویرایش اطلاعیه':'اطلاعیه جدید')+'</h4>'
+        +'<label class="field">عنوان<input class="inp" name="title" required value="'+esc(n?n.title:'')+'"></label>'
+        +'<div class="frow"><label class="field">دسته (مثلاً: تورنمنت، به‌روزرسانی، راهنما، استراتژی)<input class="inp" name="cat" required value="'+esc(n?n.cat:'تورنمنت')+'"></label>'
+        +'<label class="field" style="align-self:end"><span class="chk"><input type="checkbox" name="featured"'+(n&&n.featured?' checked':'')+'> نمایش به‌عنوان خبر اصلی صفحه</span></label></div>'
+        +'<label class="field">خلاصه (یک تا دو جمله)<textarea class="inp" name="summary" rows="2" required>'+esc(n?n.summary:'')+'</textarea></label>'
+        +'<label class="field">متن کامل (پاراگراف‌ها را با یک خط خالی جدا کنید)<textarea class="inp" name="body" rows="9" required>'+esc(n?n.body:'')+'</textarea></label>'
+        +'<div class="fbtns"><button class="btn btn-solid btn-sm" type="submit"><i data-lucide="check"></i>ذخیره</button>'
+        +'<button class="btn btn-ghost btn-sm" type="button" data-act="news-cancel">لغو</button></div></form>';
+    }
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">MANAGE / NEWS</span><h3>مدیریت اخبار و اطلاعیه‌ها</h3></div>'
+      +form
+      +'<div class="a-top"><h4>اطلاعیه‌های منتشرشده ('+fa(db.news.length)+')</h4>'
+      +'<button class="btn btn-solid btn-sm" data-act="news-new"><i data-lucide="plus"></i>اطلاعیه جدید</button></div>'
+      +'<div class="a-block">'+(db.news.map(n=>
+        '<div class="a-row"><div class="a-row-main"><strong>'+esc(n.title)+(n.featured?'<span class="badge">ویژه</span>':'')+'</strong>'
+        +'<span class="mono">'+esc(n.cat)+' · '+faDate(n.ts)+'</span></div>'
+        +'<div class="a-row-btns"><button class="btn-ico" data-act="news-edit" data-id="'+n.id+'" aria-label="ویرایش"><i data-lucide="pencil"></i></button>'
+        +'<button class="btn-ico danger" data-act="news-del" data-id="'+n.id+'" aria-label="حذف"><i data-lucide="trash-2"></i></button></div></div>').join('')
+        ||'<div class="empty">هنوز اطلاعیه‌ای ثبت نشده.</div>')+'</div>';
+    icons();
+  }
+  else if(curTab==='links'){
+    let form='';
+    if(formLinkId){
+      const l=formLinkId==='new'?null:db.links.find(x=>x.id===formLinkId);
+      form='<form class="f-form" data-form="link" data-id="'+(l?l.id:'')+'">'
+        +'<h4>'+(l?'ویرایش لینک':'لینک جدید')+'</h4>'
+        +'<div class="frow"><label class="field">نام لینک<input class="inp" name="name" required value="'+esc(l?l.name:'')+'"></label>'
+        +'<label class="field">دسته (بازی، راهنما، جامعه، تورنمنت)<input class="inp" name="cat" required value="'+esc(l?l.cat:'راهنما')+'"></label></div>'
+        +'<label class="field">آدرس (URL)<input class="inp ltr" dir="ltr" name="url" required value="'+esc(l?l.url:'')+'"></label>'
+        +'<label class="field">توضیح کوتاه<input class="inp" name="desc" required value="'+esc(l?l.desc:'')+'"></label>'
+        +'<div class="fbtns"><button class="btn btn-solid btn-sm" type="submit"><i data-lucide="check"></i>ذخیره</button>'
+        +'<button class="btn btn-ghost btn-sm" type="button" data-act="link-cancel">لغو</button></div></form>';
+    }
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">MANAGE / LINKS</span><h3>مدیریت لینک‌ها و راهنماها</h3></div>'
+      +form
+      +'<div class="a-top"><h4>لینک‌های ثبت‌شده ('+fa(db.links.length)+')</h4>'
+      +'<button class="btn btn-solid btn-sm" data-act="link-new"><i data-lucide="plus"></i>لینک جدید</button></div>'
+      +'<div class="a-block">'+(db.links.map(l=>
+        '<div class="a-row"><div class="a-row-main"><strong>'+esc(l.name)+'</strong>'
+        +'<span class="mono ltr">'+esc(l.url.replace(/^https?:\/\//,''))+' · '+esc(l.cat)+'</span></div>'
+        +'<div class="a-row-btns"><button class="btn-ico" data-act="link-edit" data-id="'+l.id+'"><i data-lucide="pencil"></i></button>'
+        +'<button class="btn-ico danger" data-act="link-del" data-id="'+l.id+'"><i data-lucide="trash-2"></i></button></div></div>').join('')
+        ||'<div class="empty">لینکی ثبت نشده.</div>')+'</div>';
+    icons();
+  }
+  else if(curTab==='board'){
+    let form='';
+    if(formBoardId){
+      const p=formBoardId==='new'?null:db.board.find(x=>x.id===formBoardId);
+      form='<form class="f-form" data-form="board" data-id="'+(p?p.id:'')+'">'
+        +'<h4>'+(p?'ویرایش بازیکن':'بازیکن جدید در لیدربورد')+'</h4>'
+        +'<div class="frow"><label class="field">نام بازیکن<input class="inp" name="name" required value="'+esc(p?p.name:'')+'"></label>'
+        +'<label class="field">کلن (TDR برای اعضای کلن)<input class="inp ltr" dir="ltr" name="clan" value="'+esc(p?(p.clan||''):'TDR')+'"></label></div>'
+        +'<div class="frow"><label class="field">تعداد برد<input class="inp" type="number" min="0" name="wins" required value="'+(p?p.wins:0)+'"></label>'
+        +'<label class="field">تعداد بازی<input class="inp" type="number" min="0" name="games" required value="'+(p?p.games:0)+'"></label></div>'
+        +'<label class="field">نشان ویژه (اختیاری — مثلاً: سازنده سایت، کاپیتان)<input class="inp" name="tag" value="'+esc(p?(p.tag||''):'')+'"></label>'
+        +'<div class="hint" style="margin-bottom:14px">ترتیب جدول به‌صورت خودکار بر اساس تعداد برد چیده می‌شود.</div>'
+        +'<div class="fbtns"><button class="btn btn-solid btn-sm" type="submit"><i data-lucide="check"></i>ذخیره</button>'
+        +'<button class="btn btn-ghost btn-sm" type="button" data-act="board-cancel">لغو</button></div></form>';
+    }
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">MANAGE / LEADERBOARD</span><h3>مدیریت لیدربورد بازیکنان</h3></div>'
+      +form
+      +'<div class="a-top"><h4>بازیکنان ثبت‌شده ('+fa(db.board.length)+')</h4>'
+      +'<button class="btn btn-solid btn-sm" data-act="board-new"><i data-lucide="trophy"></i>بازیکن جدید</button></div>'
+      +'<div class="a-block">'+([...db.board].sort((a,b)=>(b.wins||0)-(a.wins||0)).map(p=>
+        '<div class="a-row"><div class="a-row-main"><strong>'+esc(p.name)
+        +(p.tag?'<span class="badge">'+esc(p.tag)+'</span>':'')
+        +(p.clan?'<span class="badge" style="color:var(--ink2);border-color:var(--line2)">'+esc(p.clan)+'</span>':'')+'</strong>'
+        +'<span class="mono">'+fa(p.wins)+' برد از '+fa(p.games)+' بازی</span></div>'
+        +'<div class="a-row-btns"><button class="btn-ico" data-act="board-edit" data-id="'+p.id+'"><i data-lucide="pencil"></i></button>'
+        +'<button class="btn-ico danger" data-act="board-del" data-id="'+p.id+'"><i data-lucide="trash-2"></i></button></div></div>').join('')
+        ||'<div class="empty">بازیکنی ثبت نشده.</div>')+'</div>';
+    icons();
+  }
+  else if(curTab==='chat'){
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">MANAGE / CHAT</span><h3>مدیریت گفتگو</h3></div>'
+      +'<div class="a-top"><h4>پیام‌ها ('+fa(db.chat.length)+')</h4>'
+      +'<button class="btn btn-danger-outline btn-sm" data-act="chat-clear"><i data-lucide="eraser"></i>پاک‌سازی کل گفتگو</button></div>'
+      +'<div class="a-block">'+(db.chat.map(m=>
+        '<div class="a-row"><div class="a-row-main"><strong style="color:'+esc(m.color)+'">'+esc(m.name)+'</strong>'
+        +'<span class="mono">'+faDate(m.ts)+' '+faTime(m.ts)+'</span>'
+        +'<div style="font-size:13px;color:var(--ink2);margin-top:4px">'+esc(m.text)+'</div></div>'
+        +'<div class="a-row-btns"><button class="btn-ico danger" data-act="chat-del" data-id="'+m.id+'"><i data-lucide="trash-2"></i></button></div></div>').join('')
+        ||'<div class="empty">پیامی وجود ندارد.</div>')+'</div>';
+    icons();
+  }
+  else if(curTab==='settings'){
+    const s=db.settings;
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">SETTINGS</span><h3>تنظیمات و ظاهر سایت</h3></div>'
+      +'<form class="a-block" data-form="settings"><h4><i data-lucide="paintbrush"></i>محتوای صفحه اصلی و لینک‌ها</h4>'
+      +'<label class="field">کیک بالای تیتر<input class="inp" name="heroKicker" value="'+esc(s.heroKicker)+'"></label>'
+      +'<label class="field">تیتر اصلی<div class="hint">خط جدید = رفتن به سطر بعد؛ متن بین دو ستاره (*) به رنگ کهربایی نمایش داده می‌شود.</div>'
+      +'<textarea class="inp" name="heroTitle" rows="2">'+esc(s.heroTitle)+'</textarea></label>'
+      +'<label class="field">زیرتیتر<input class="inp" name="heroSub" value="'+esc(s.heroSub)+'"></label>'
+      +'<div class="frow"><label class="field">متن دکمه روبیکا<input class="inp" name="rubikaLabel" value="'+esc(s.rubikaLabel)+'"></label>'
+      +'<label class="field">آدرس کانال روبیکا کلن<input class="inp ltr" dir="ltr" name="rubikaUrl" value="'+esc(s.rubikaUrl)+'"></label></div>'
+      +'<label class="field">آدرس بازی (دکمه «شروع بازی»)<input class="inp ltr" dir="ltr" name="gameUrl" value="'+esc(s.gameUrl)+'"></label>'
+      +'<button class="btn btn-solid btn-sm" type="submit"><i data-lucide="check"></i>ذخیره تنظیمات</button></form>'
+      +'<form class="a-block" data-form="pass"><h4><i data-lucide="key-round"></i>تغییر رمز مدیریت</h4>'
+      +'<div class="frow">'
+      +'<label class="field">رمز فعلی<input class="inp ltr" type="password" name="cur" required></label>'
+      +'<label class="field">رمز جدید (حداقل ۴ کاراکتر)<input class="inp ltr" type="password" name="n1" required></label></div>'
+      +'<label class="field">تکرار رمز جدید<input class="inp ltr" type="password" name="n2" required></label>'
+      +'<div class="err" id="passErr"></div>'
+      +'<button class="btn btn-solid btn-sm" type="submit"><i data-lucide="check"></i>تغییر رمز</button></form>'
+      +'<div class="a-block"><h4><i data-lucide="rotate-ccw"></i>بازنشانی</h4>'
+      +'<p style="font-size:13px;color:var(--mut);margin-bottom:14px">همه اطلاعیه‌ها، لینک‌ها، لیدربورد و تنظیمات به داده‌های نمونه اولیه برمی‌گردند.</p>'
+      +'<button class="btn btn-danger-outline btn-sm" data-act="reset-content"><i data-lucide="rotate-ccw"></i>بازنشانی محتوای سایت</button></div>';
+    icons();
+  }
+  else if(curTab==='backup'){
+    B.innerHTML='<div class="pn-head"><span class="mono ltr">BACKUP</span><h3>پشتیبان‌گیری و بازگردانی</h3></div>'
+      +'<div class="a-block"><h4><i data-lucide="download"></i>دریافت پشتیبان</h4>'
+      +'<p style="font-size:13px;color:var(--mut);margin-bottom:16px">کل محتوای سایت (اطلاعیه‌ها، لینک‌ها، لیدربورد، گفتگو و تنظیمات) در یک فایل JSON ذخیره می‌شود.</p>'
+      +'<button class="btn btn-solid btn-sm" data-act="backup-dl"><i data-lucide="download"></i>دریافت فایل پشتیبان</button></div>'
+      +'<div class="a-block"><h4><i data-lucide="upload"></i>بازگردانی از فایل</h4>'
+      +'<p style="font-size:13px;color:var(--mut);margin-bottom:16px">فایل پشتیبان قبلی را بارگذاری کنید؛ محتوای فعلی جایگزین می‌شود.</p>'
+      +'<label class="btn btn-ghost btn-sm"><i data-lucide="upload"></i>انتخاب فایل JSON'
+      +'<input type="file" id="importFile" accept=".json,application/json" hidden></label></div>';
+    icons();
+    $('importFile').addEventListener('change',e=>{
+      const f=e.target.files[0];if(!f)return;
+      const r=new FileReader();
+      r.onload=()=>{
+        try{
+          const d=JSON.parse(r.result);
+          if(!d||!Array.isArray(d.news)||!d.settings)throw 0;
+          if(!Array.isArray(d.board))d.board=[];
+          db=d;save();renderAll();renderAdminBody();
+          toast('پشتیبان با موفقیت بازگردانده شد.');
+        }catch(err){toast('فایل پشتیبان معتبر نیست.','err');}
+      };
+      r.readAsText(f);
+    });
+  }
+}
+
+/* --- رویدادهای پنل --- */
+ $('adminBody').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const act=b.dataset.act,id=b.dataset.id;
+  if(act==='logout'){
+    sessionStorage.removeItem('openfront_admin');refreshAdminBtn();closePanel();
+    toast('از پنل مدیریت خارج شدید.');
+  }
+  else if(act==='close-panel')closePanel();
+  else if(act==='news-new'){formNewsId='new';renderAdminBody();}
+  else if(act==='news-edit'){formNewsId=id;renderAdminBody();$('adminBody').scrollTop=0;}
+  else if(act==='news-cancel'){formNewsId=null;renderAdminBody();}
+  else if(act==='news-del'){
+    askConfirm('حذف اطلاعیه','این اطلاعیه برای همیشه حذف می‌شود. مطمئن هستید؟',()=>{
+      const n=db.news.find(x=>x.id===id);
+      db.news=db.news.filter(x=>x.id!==id);
+      addLog('حذف اطلاعیه: «'+(n?n.title:'')+'»');
+      save();renderNews();renderTicker();renderStats();renderAdminBody();
+      toast('اطلاعیه حذف شد.');
+    });
+  }
+  else if(act==='link-new'){formLinkId='new';renderAdminBody();}
+  else if(act==='link-edit'){formLinkId=id;renderAdminBody();$('adminBody').scrollTop=0;}
+  else if(act==='link-cancel'){formLinkId=null;renderAdminBody();}
+  else if(act==='link-del'){
+    askConfirm('حذف لینک','این لینک از فهرست سایت حذف می‌شود. مطمئن هستید؟',()=>{
+      db.links=db.links.filter(x=>x.id!==id);
+      addLog('حذف یک لینک');
+      save();renderLinks();renderStats();renderAdminBody();
+      toast('لینک حذف شد.');
+    });
+  }
+  else if(act==='board-new'){formBoardId='new';renderAdminBody();}
+  else if(act==='board-edit'){formBoardId=id;renderAdminBody();$('adminBody').scrollTop=0;}
+  else if(act==='board-cancel'){formBoardId=null;renderAdminBody();}
+  else if(act==='board-del'){
+    askConfirm('حذف بازیکن','این بازیکن از لیدربورد حذف می‌شود. مطمئن هستید؟',()=>{
+      const p=db.board.find(x=>x.id===id);
+      db.board=db.board.filter(x=>x.id!==id);
+      addLog('حذف بازیکن از لیدربورد: «'+(p?p.name:'')+'»');
+      save();renderBoard();renderStats();renderAdminBody();
+      toast('بازیکن از لیدربورد حذف شد.');
+    });
+  }
+  else if(act==='chat-del'){
+    db.chat=db.chat.filter(x=>x.id!==id);
+    addLog('حذف یک پیام گفتگو');
+    save();renderChat();renderStats();renderAdminBody();
+    toast('پیام حذف شد.');
+  }
+  else if(act==='chat-clear'){
+    askConfirm('پاک‌سازی گفتگو','همه پیام‌ها برای همیشه پاک می‌شوند. مطمئن هستید؟',()=>{
+      db.chat=[];addLog('پاک‌سازی کامل اتاق گفتگو');
+      save();renderChat();renderStats();renderAdminBody();
+      toast('گفتگو پاک شد.');
+    });
+  }
+  else if(act==='backup-dl'){
+    const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='tdr-clan-backup.json';a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    toast('فایل پشتیبان دانلود شد.');
+  }
+  else if(act==='reset-content'){
+    askConfirm('بازنشانی محتوا','همه تغییرات شما پاک و داده‌های نمونه بازگردانده می‌شود. مطمئن هستید؟',()=>{
+      localStorage.removeItem(LS);db=seed();save();
+      renderAll();renderAdminBody();toast('محتوای سایت بازنشانی شد.');
+    });
+  }
+  else if(act==='goto-news-new'){setTab('news');formNewsId='new';renderAdminBody();}
+  else if(act==='goto-link-new'){setTab('links');formLinkId='new';renderAdminBody();}
+  else if(act==='goto-board-new'){setTab('board');formBoardId='new';renderAdminBody();}
+  else if(act==='tab-backup')setTab('backup');
+});
+ $('adminBody').addEventListener('submit',e=>{
+  const f=e.target.closest('[data-form]');if(!f)return;
+  e.preventDefault();
+  const kind=f.dataset.form;
+  if(kind==='news'){
+    const fd=new FormData(f);
+    const editId=f.dataset.id;
+    const item={
+      id:editId||uid(),
+      title:fd.get('title').trim(),cat:fd.get('cat').trim()||'تورنمنت',
+      summary:fd.get('summary').trim(),body:fd.get('body').trim(),
+      featured:f.querySelector('[name=featured]').checked,
+      ts:editId?(db.news.find(x=>x.id===editId)||{}).ts||Date.now():Date.now()
+    };
+    if(item.featured)db.news.forEach(n=>n.featured=false);
+    if(editId){db.news=db.news.map(n=>n.id===editId?item:n);addLog('ویرایش اطلاعیه: «'+item.title+'»');}
+    else{db.news.unshift(item);addLog('انتشار اطلاعیه جدید: «'+item.title+'»');}
+    save();renderNews();renderTicker();renderStats();
+    formNewsId=null;renderAdminBody();toast('اطلاعیه ذخیره شد.');
+  }
+  else if(kind==='link'){
+    const fd=new FormData(f);
+    const editId=f.dataset.id;
+    let url=fd.get('url').trim();
+    if(!/^https?:\/\//i.test(url))url='https://'+url;
+    const item={id:editId||uid(),name:fd.get('name').trim(),cat:fd.get('cat').trim()||'راهنما',url,
+      desc:fd.get('desc').trim()};
+    if(editId){db.links=db.links.map(l=>l.id===editId?item:l);addLog('ویرایش لینک: «'+item.name+'»');}
+    else{db.links.unshift(item);addLog('افزودن لینک: «'+item.name+'»');}
+    save();renderLinks();renderStats();
+    formLinkId=null;renderAdminBody();toast('لینک ذخیره شد.');
+  }
+  else if(kind==='board'){
+    const fd=new FormData(f);
+    const editId=f.dataset.id;
+    let wins=Math.max(0,parseInt(fd.get('wins'),10)||0);
+    let games=Math.max(0,parseInt(fd.get('games'),10)||0);
+    if(games>0&&wins>games)wins=games;
+    const item={id:editId||uid(),name:fd.get('name').trim(),clan:(fd.get('clan')||'').trim().toUpperCase(),
+      wins,games,tag:(fd.get('tag')||'').trim()};
+    if(editId){db.board=db.board.map(p=>p.id===editId?item:p);addLog('ویرایش بازیکن لیدربورد: «'+item.name+'»');}
+    else{db.board.push(item);addLog('ثبت بازیکن جدید در لیدربورد: «'+item.name+'»');}
+    save();renderBoard();renderStats();
+    formBoardId=null;renderAdminBody();toast('بازیکن ذخیره شد.');
+  }
+  else if(kind==='settings'){
+    const fd=new FormData(f);
+    Object.assign(db.settings,{
+      heroKicker:fd.get('heroKicker').trim(),heroTitle:fd.get('heroTitle').trim(),
+      heroSub:fd.get('heroSub').trim(),rubikaLabel:fd.get('rubikaLabel').trim(),
+      rubikaUrl:fd.get('rubikaUrl').trim(),gameUrl:fd.get('gameUrl').trim()
+    });
+    addLog('به‌روزرسانی تنظیمات و ظاهر سایت');
+    save();renderHero();renderStats();toast('تنظیمات ذخیره شد.');
+  }
+  else if(kind==='pass'){
+    const fd=new FormData(f);
+    const err=$('passErr');
+    if(fd.get('cur')!==db.settings.password){err.textContent='رمز فعلی درست نیست.';return;}
+    const n1=fd.get('n1'),n2=fd.get('n2');
+    if(n1.length<4){err.textContent='رمز جدید باید حداقل ۴ کاراکتر باشد.';return;}
+    if(n1!==n2){err.textContent='تکرار رمز جدید مطابقت ندارد.';return;}
+    db.settings.password=n1;addLog('تغییر رمز مدیریت');
+    save();renderAdminBody();toast('رمز مدیریت با موفقیت تغییر کرد.');
+  }
+});
+
+/* ---------- ابزارهای عمومی ---------- */
+setInterval(()=>{$('clock').textContent=new Date().toLocaleTimeString('en-GB');},1000);
+ $('clock').textContent=new Date().toLocaleTimeString('en-GB');
+
+ $('burger').addEventListener('click',()=>$('mobileNav').classList.toggle('open'));
+ $('mobileNav').addEventListener('click',()=>$('mobileNav').classList.remove('open'));
+
+/* اسکرول‌اسپای */
+const spy=new IntersectionObserver(es=>{
+  es.forEach(en=>{
+    if(!en.isIntersecting)return;
+    document.querySelectorAll('#mainNav a').forEach(a=>
+      a.classList.toggle('active',a.getAttribute('href')==='#'+en.target.id));
+  });
+},{rootMargin:'-45% 0px -50% 0px'});
+['home','newsSec','linksSec','boardSec','chatSec'].forEach(id=>spy.observe($(id)));
+
+/* ظاهرشدن نرم بخش‌ها */
+const rev=new IntersectionObserver(es=>{
+  es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');rev.unobserve(en.target);}});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>rev.observe(el));
+
+/* ---------- راه‌اندازی ---------- */
+function renderAll(){renderHero();renderTicker();renderNews();renderLinks();renderBoard();renderChat();renderStats();refreshAdminBtn();}
+renderAll();
+icons();
+</script>
+</body>
+</html>
